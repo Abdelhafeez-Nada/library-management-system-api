@@ -33,7 +33,7 @@ public class Book {
     private String author;
     private Short publicationYear;
     private String isbn;
-    @OneToMany(mappedBy = "patron", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BorrowingRecord> borrowingRecords;
     @CreationTimestamp
     private Date createdAt;
