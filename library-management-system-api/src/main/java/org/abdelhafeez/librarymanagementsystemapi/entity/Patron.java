@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Entity
-@Table(name = "pattrons")
+@Table(name = "patrons")
 public class Patron {
 
     @Id
