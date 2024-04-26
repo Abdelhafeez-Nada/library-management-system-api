@@ -44,4 +44,15 @@ public class BookRepoTest {
         assertEquals("Updated Author", updatedBook.getAuthor());
     }
 
+    @Test
+    public void testFindBookById() {
+        // create new book and persist it
+        Book book = Book.builder().author("author").isbn("isbn").title("title").build();
+        book = entityManager.persist(book);
+        // retrieve the saved book by its ID
+        Book foundBook = bookRepo.findById(book.getId()).orElse(null);
+        // assert that the retrieved book matches the saved one
+        assertEquals(book, foundBook);
+    }
+
 }
