@@ -1,6 +1,8 @@
 package org.abdelhafeez.librarymanagementsystemapi.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -73,6 +75,19 @@ public class BookRepoTest {
         List<Book> books = bookRepo.findAll();
         // assert all books have been reterived
         assertEquals(count + 2, books.size());
+    }
+
+    @Test
+    public void testDeleteBook() {
+        // create new book and persist it
+        Book book = Book.builder().author("author").isbn("isbn").title("title").build();
+        book = entityManager.persist(book);
+        // delete the book from the repository
+        bookRepo.delete(book);
+        // try to find deleted book
+        Book shouldBeNull = bookRepo.findById(book.getId()).orElse(null);
+        // Assert that the book is deleted successfully
+        assertNull(shouldBeNull);
     }
 
 }
