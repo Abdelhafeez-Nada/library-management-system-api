@@ -10,6 +10,7 @@ import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -23,7 +24,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Entity
-@Table(name = "borrowing_records")
+@Table(name = "borrowing_records", indexes = {
+        @Index(name = "idx_patron_id", columnList = "patron_id"),
+        @Index(name = "idx_book_id", columnList = "book_id")
+})
 public class BorrowingRecord {
 
     @Id
