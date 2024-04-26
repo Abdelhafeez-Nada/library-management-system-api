@@ -1,6 +1,10 @@
 package org.abdelhafeez.librarymanagementsystemapi.entity;
 
+import java.util.Date;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -29,7 +33,10 @@ public class Book {
     private String author;
     private Short publicationYear;
     private String isbn;
-
     @OneToMany(mappedBy = "patron", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BorrowingRecord> borrowingRecords;
+    @CreationTimestamp
+    private Date createdAt;
+    @UpdateTimestamp
+    private Date updatedAt;
 }
