@@ -33,4 +33,8 @@ public class BorrowingRecord {
     @JoinColumn(name = "patron_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_patron_id"))
     private Patron patron;
 
+    @ManyToOne
+    @JoinColumn(name = "book_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_book_id"))
+    private Book book;
+
 }
