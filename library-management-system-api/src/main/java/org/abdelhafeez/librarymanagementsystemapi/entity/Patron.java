@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Entity
-@Table(name = "books")
+@Table(name = "pattrons")
 public class Patron {
 
     @Id
