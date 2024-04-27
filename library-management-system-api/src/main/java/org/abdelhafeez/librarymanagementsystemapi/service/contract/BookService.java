@@ -1,4 +1,4 @@
-package org.abdelhafeez.librarymanagementsystemapi.service;
+package org.abdelhafeez.librarymanagementsystemapi.service.contract;
 
 import java.util.List;
 
