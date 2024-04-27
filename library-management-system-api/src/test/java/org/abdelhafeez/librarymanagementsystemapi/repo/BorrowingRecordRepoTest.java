@@ -11,6 +11,7 @@ import org.abdelhafeez.librarymanagementsystemapi.entity.Patron;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
 public class BorrowingRecordRepoTest {
@@ -25,6 +26,7 @@ public class BorrowingRecordRepoTest {
     private PatronRepo patronRepo;
 
     @Test
+    @Transactional
     public void testInsertBorrowingRecord() {
         // caretae and save bbok
         Book book = new Book();
