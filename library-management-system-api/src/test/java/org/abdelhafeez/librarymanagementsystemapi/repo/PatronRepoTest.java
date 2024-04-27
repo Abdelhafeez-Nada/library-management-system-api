@@ -3,11 +3,15 @@ package org.abdelhafeez.librarymanagementsystemapi.repo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.abdelhafeez.librarymanagementsystemapi.entity.Patron;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+import jakarta.persistence.Query;
 
 @DataJpaTest
 public class PatronRepoTest {
@@ -53,5 +57,21 @@ public class PatronRepoTest {
         Patron foundPatron = patronRepo.findById(patron.getId()).orElse(null);
         // assert that the retrieved patron matches the saved one
         assertEquals(patron, foundPatron);
+    }
+
+    @Test
+    public void testFindAllPatrons() {
+        // execute JPQL to count all patrons
+        Query query = entityManager.getEntityManager().createQuery("SELECT COUNT(p) FROM Patron p");
+        Long count = (Long) query.getSingleResult();
+        // save two patrons
+        Patron patron1 = Patron.builder().name("patron-1").contactInfo("123456789").build();
+        entityManager.persist(patron1);
+        Patron patron2 = Patron.builder().name("patron-2").contactInfo("987654321").build();
+        entityManager.persist(patron2);
+        // retrieve all patrons from the repository
+        List<Patron> patrons = patronRepo.findAll();
+        // assert all patrons have been retrieved
+        assertEquals(count + 2, patrons.size());
     }
 }
