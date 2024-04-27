@@ -1,5 +1,7 @@
 package org.abdelhafeez.librarymanagementsystemapi.web.validation;
 
+import java.time.LocalDate;
+
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -7,8 +9,8 @@ public class publicationYearValidator implements ConstraintValidator<Publication
 
     @Override
     public boolean isValid(Short value, ConstraintValidatorContext context) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isValid'");
+        Short start = Short.valueOf(String.valueOf(1900));
+        Short end = Short.valueOf(String.valueOf(LocalDate.now().getYear()));
+        return value >= start && value <= end;
     }
-
 }
