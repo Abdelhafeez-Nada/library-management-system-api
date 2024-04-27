@@ -67,6 +67,18 @@ public class BeanMapperTest {
         assertEquals(entityList.get(1).getAuthor(), dtoList.get(1).getAuthor());
     }
 
+    @Test
+    public void testMapDtoToEntity() {
+        // map dto to entity
+        Book book = beanMapper.mapDtoToEntity(requestBookDto, Book.class);
+        // assert that mapping done successfully
+        assertNotNull(book);
+        assertEquals(book.getAuthor(), requestBookDto.getAuthor());
+        assertEquals(book.getTitle(), requestBookDto.getTitle());
+        assertEquals(book.getIsbn(), requestBookDto.getIsbn());
+        assertEquals(book.getPublicationYear(), requestBookDto.getPublicationYear());
+    }
+
     private List<Book> creatEntityList() {
         // create list of entity
         Book bookEntity1 = Book.builder()
