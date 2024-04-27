@@ -1,5 +1,8 @@
 package org.abdelhafeez.librarymanagementsystemapi.util;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -17,5 +20,11 @@ public class BeanMapper {
 
     public <T, D> T mapDtoToEntity(D dto, Class<T> entityClass) {
         return mapper.map(dto, entityClass);
+    }
+
+    public <T, D> List<D> mapEntityListToDtoList(List<T> entityList, Class<D> dtoClass) {
+        return entityList.stream()
+                .map(entity -> mapEntityToDTO(entity, dtoClass))
+                .collect(Collectors.toList());
     }
 }
