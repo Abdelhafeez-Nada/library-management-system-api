@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class RequestBookDto {
 
-    private Long id;
     @NotBlank
     private String title;
     @NotBlank
