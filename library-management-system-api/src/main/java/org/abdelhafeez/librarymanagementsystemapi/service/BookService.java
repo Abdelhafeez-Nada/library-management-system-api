@@ -15,4 +15,7 @@ public interface BookService {
 
     public ResponseBookDto createBook(RequestBookDto dto) throws Exception, BadRequestException;
 
+    public ResponseBookDto updateBook(Long id, RequestBookDto dto)
+            throws Exception, ResourceNotFoundException, BadRequestException;
+
 }
