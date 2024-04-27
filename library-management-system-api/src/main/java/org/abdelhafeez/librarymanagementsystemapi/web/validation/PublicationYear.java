@@ -10,7 +10,7 @@ import jakarta.validation.Constraint;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-// @Constraint(validatedBy = )
+@Constraint(validatedBy = publicationYearValidator.class)
 @Documented
 public @interface PublicationYear {
 
