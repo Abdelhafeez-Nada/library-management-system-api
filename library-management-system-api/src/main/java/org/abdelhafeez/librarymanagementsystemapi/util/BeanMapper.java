@@ -10,4 +10,8 @@ import lombok.AllArgsConstructor;
 public class BeanMapper {
 
     private final ModelMapper mapper;
+
+    public <T, D> D mapEntityToDTO(T entity, Class<D> dtoClass) {
+        return mapper.map(entity, dtoClass);
+    }
 }
