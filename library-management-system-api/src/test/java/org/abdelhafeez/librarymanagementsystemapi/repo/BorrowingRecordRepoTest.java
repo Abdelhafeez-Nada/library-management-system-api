@@ -8,6 +8,7 @@ import java.util.Date;
 import org.abdelhafeez.librarymanagementsystemapi.entity.Book;
 import org.abdelhafeez.librarymanagementsystemapi.entity.BorrowingRecord;
 import org.abdelhafeez.librarymanagementsystemapi.entity.Patron;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -25,11 +26,14 @@ public class BorrowingRecordRepoTest {
     @Autowired
     private PatronRepo patronRepo;
 
-    @Test
-    @Transactional
-    public void testInsertBorrowingRecord() {
+    private Book book;
+    private Patron patron;
+    private BorrowingRecord borrowingRecord;
+
+    @BeforeEach
+    public void setup() {
         // caretae and save bbok
-        Book book = new Book();
+        book = new Book();
         book.setTitle("Sample Book");
         book.setAuthor("Sample Author");
         book.setPublicationYear((short) 2020);
@@ -37,15 +41,21 @@ public class BorrowingRecordRepoTest {
         book.setAvailable(true);
         book = bookRepo.save(book);
         // create and save patron
-        Patron patron = new Patron();
+        patron = new Patron();
         patron.setName("patron-1");
         patron.setContactInfo("john@example.com");
         patron = patronRepo.save(patron);
         // create and save borrowin record
-        BorrowingRecord borrowingRecord = new BorrowingRecord();
+        borrowingRecord = new BorrowingRecord();
         borrowingRecord.setBook(book);
         borrowingRecord.setPatron(patron);
         borrowingRecord.setBorrowingDate(new Date());
+    }
+
+    @Test
+    @Transactional
+    public void testInsertBorrowingRecord() {
+        // save borrowing rcord
         BorrowingRecord savedRecord = borrowingRecordRepo.save(borrowingRecord);
         // assert that borrowin record saved successfully
         assertNotNull(savedRecord.getId());
