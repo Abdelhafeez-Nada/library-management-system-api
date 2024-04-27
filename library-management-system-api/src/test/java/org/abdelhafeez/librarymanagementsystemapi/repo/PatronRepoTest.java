@@ -43,4 +43,15 @@ public class PatronRepoTest {
         assertEquals("patron-2", updatedPatron.getName());
         assertEquals("987654321", updatedPatron.getContactInfo());
     }
+
+    @Test
+    public void testFindPatronById() {
+        // create new patron and persist it
+        Patron patron = Patron.builder().name("ptron-1").contactInfo("123456789").build();
+        patron = entityManager.persist(patron);
+        // retrieve the saved patron by its ID
+        Patron foundPatron = patronRepo.findById(patron.getId()).orElse(null);
+        // assert that the retrieved patron matches the saved one
+        assertEquals(patron, foundPatron);
+    }
 }
