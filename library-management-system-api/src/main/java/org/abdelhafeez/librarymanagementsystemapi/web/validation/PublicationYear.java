@@ -14,4 +14,6 @@ import jakarta.validation.Constraint;
 @Documented
 public @interface PublicationYear {
 
+    String message() default "Invalid publication year!";
+
 }
