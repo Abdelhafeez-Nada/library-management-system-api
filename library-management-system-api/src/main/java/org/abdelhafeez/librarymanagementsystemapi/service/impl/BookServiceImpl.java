@@ -6,6 +6,7 @@ import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
 import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
 import org.abdelhafeez.librarymanagementsystemapi.repo.BookRepo;
 import org.abdelhafeez.librarymanagementsystemapi.service.contract.BookService;
+import org.abdelhafeez.librarymanagementsystemapi.util.BeanMapper;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.RequestBookDto;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.ResponseBookDto;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import lombok.AllArgsConstructor;
 public class BookServiceImpl implements BookService {
 
     private final BookRepo bookRepo;
+    private final BeanMapper beanMapper;
 
     @Override
     public List<ResponseBookDto> getAllBooks() throws Exception {
