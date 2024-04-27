@@ -36,6 +36,8 @@ public class Book {
     private String isbn;
     @Column(columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean available;
+    @Column(columnDefinition = "BOOLEAN DEFAULT true")
+    private Boolean enabled;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BorrowingRecord> borrowingRecords;
     @CreationTimestamp
