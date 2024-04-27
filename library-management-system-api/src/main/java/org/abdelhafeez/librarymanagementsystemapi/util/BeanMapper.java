@@ -14,7 +14,7 @@ public class BeanMapper {
 
     private final ModelMapper mapper;
 
-    public <T, D> D mapEntityToDTO(T entity, Class<D> dtoClass) {
+    public <T, D> D mapEntityToDto(T entity, Class<D> dtoClass) {
         return mapper.map(entity, dtoClass);
     }
 
@@ -24,7 +24,7 @@ public class BeanMapper {
 
     public <T, D> List<D> mapEntityListToDtoList(List<T> entityList, Class<D> dtoClass) {
         return entityList.stream()
-                .map(entity -> mapEntityToDTO(entity, dtoClass))
+                .map(entity -> mapEntityToDto(entity, dtoClass))
                 .collect(Collectors.toList());
     }
 }
