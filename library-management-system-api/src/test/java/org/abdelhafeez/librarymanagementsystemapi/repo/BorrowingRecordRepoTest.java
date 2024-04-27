@@ -31,6 +31,7 @@ public class BorrowingRecordRepoTest {
     private BorrowingRecord borrowingRecord;
 
     @BeforeEach
+    @Transactional
     public void setup() {
         // caretae and save bbok
         book = new Book();
@@ -61,6 +62,19 @@ public class BorrowingRecordRepoTest {
         assertNotNull(savedRecord.getId());
         assertEquals(book.getId(), savedRecord.getBook().getId());
         assertEquals(patron.getId(), savedRecord.getPatron().getId());
+    }
+
+    @Test
+    @Transactional
+    public void testUpdateBorrowingRecord() {
+        // save borrowing rcord
+        BorrowingRecord savedRecord = borrowingRecordRepo.save(borrowingRecord);
+        // update borrowing record data
+        savedRecord.setReturnDate(new Date());
+        BorrowingRecord updatedRecord = borrowingRecordRepo.save(savedRecord);
+        // assert that updates are commited successfully
+        assertEquals(borrowingRecord.getId(), updatedRecord.getId());
+        assertEquals(borrowingRecord.getReturnDate(), updatedRecord.getReturnDate());
     }
 
 }
