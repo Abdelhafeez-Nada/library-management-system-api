@@ -14,4 +14,8 @@ public class BeanMapper {
     public <T, D> D mapEntityToDTO(T entity, Class<D> dtoClass) {
         return mapper.map(entity, dtoClass);
     }
+
+    public <T, D> T mapDtoToEntity(D dto, Class<T> entityClass) {
+        return mapper.map(dto, entityClass);
+    }
 }
