@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,6 +34,8 @@ public class Book {
     private String author;
     private Short publicationYear;
     private String isbn;
+    @Column(columnDefinition = "BOOLEAN DEFAULT true")
+    private Boolean available;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BorrowingRecord> borrowingRecords;
     @CreationTimestamp
