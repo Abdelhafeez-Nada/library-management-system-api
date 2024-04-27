@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
 import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
-import org.abdelhafeez.librarymanagementsystemapi.web.dto.BookDto;
+import org.abdelhafeez.librarymanagementsystemapi.web.dto.RequestBookDto;
 
 public interface BookService {
 
-    public List<BookDto> getAllBooks() throws Exception;
+    public List<RequestBookDto> getAllBooks() throws Exception;
 
-    public BookDto getBookById(Long id) throws Exception, ResourceNotFoundException;
+    public RequestBookDto getBookById(Long id) throws Exception, ResourceNotFoundException;
 
-    public BookDto createBook(BookDto dto) throws Exception, BadRequestException;
+    public RequestBookDto createBook(RequestBookDto dto) throws Exception, BadRequestException;
 
 }

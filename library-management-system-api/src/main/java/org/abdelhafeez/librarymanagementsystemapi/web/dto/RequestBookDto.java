@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class BookDto {
+public class RequestBookDto {
 
     private Long id;
     @NotBlank
