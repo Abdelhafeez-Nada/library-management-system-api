@@ -1,6 +1,7 @@
 package org.abdelhafeez.librarymanagementsystemapi.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -73,5 +74,18 @@ public class PatronRepoTest {
         List<Patron> patrons = patronRepo.findAll();
         // assert all patrons have been retrieved
         assertEquals(count + 2, patrons.size());
+    }
+
+    @Test
+    public void testDeletePatron() {
+        // create new patron and persist it
+        Patron patron = Patron.builder().name("patron-1").contactInfo("123456789").build();
+        patron = entityManager.persist(patron);
+        // delete the patron from the repository
+        patronRepo.delete(patron);
+        // try to find deleted patron
+        Patron shouldBeNull = patronRepo.findById(patron.getId()).orElse(null);
+        // assert that the patron is deleted successfully
+        assertNull(shouldBeNull);
     }
 }
