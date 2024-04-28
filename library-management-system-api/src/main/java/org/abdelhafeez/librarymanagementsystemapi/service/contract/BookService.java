@@ -9,15 +9,15 @@ import org.abdelhafeez.librarymanagementsystemapi.web.dto.ResponseBookDto;
 
 public interface BookService {
 
-    public List<ResponseBookDto> getAllBooks() throws Exception;
+    public List<ResponseBookDto> getAllBooks();
 
-    public ResponseBookDto getBookById(Long id) throws Exception, ResourceNotFoundException;
+    public ResponseBookDto getBookById(Long id) throws ResourceNotFoundException;
 
-    public ResponseBookDto createBook(RequestBookDto dto) throws Exception, BadRequestException;
+    public ResponseBookDto createBook(RequestBookDto dto) throws BadRequestException;
 
     public ResponseBookDto updateBook(Long id, RequestBookDto dto)
-            throws Exception, ResourceNotFoundException, BadRequestException;
+            throws ResourceNotFoundException, BadRequestException;
 
-    public void deleteBook(Long id) throws Exception, ResourceNotFoundException, BadRequestException;
+    public void deleteBook(Long id) throws ResourceNotFoundException, BadRequestException;
 
 }

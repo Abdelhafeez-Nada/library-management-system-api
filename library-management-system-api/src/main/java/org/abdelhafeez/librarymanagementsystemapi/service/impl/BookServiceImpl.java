@@ -24,12 +24,12 @@ public class BookServiceImpl implements BookService {
     private final BeanMapper beanMapper;
 
     @Override
-    public List<ResponseBookDto> getAllBooks() throws Exception {
+    public List<ResponseBookDto> getAllBooks() {
         return beanMapper.mapEntityListToDtoList(bookRepo.findAll(), ResponseBookDto.class);
     }
 
     @Override
-    public ResponseBookDto getBookById(Long id) throws Exception, ResourceNotFoundException {
+    public ResponseBookDto getBookById(Long id) throws ResourceNotFoundException {
         Optional<Book> optional = bookRepo.findById(id);
         if (!optional.isPresent())
             throw new ResourceNotFoundException("Book", "Id", id);
@@ -37,7 +37,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public ResponseBookDto createBook(RequestBookDto dto) throws Exception, BadRequestException {
+    public ResponseBookDto createBook(RequestBookDto dto) throws BadRequestException {
         Book saved = bookRepo.save(beanMapper.mapDtoToEntity(dto, Book.class));
         return beanMapper.mapEntityToDto(saved, ResponseBookDto.class);
     }
@@ -66,7 +66,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBook(Long id) throws Exception, ResourceNotFoundException, BadRequestException {
+    public void deleteBook(Long id) throws ResourceNotFoundException, BadRequestException {
         // Input Validation
         if (id == null)
             throw new BadRequestException("Invalid input parameters");

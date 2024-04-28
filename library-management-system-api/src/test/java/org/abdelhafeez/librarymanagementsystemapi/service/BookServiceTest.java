@@ -40,7 +40,7 @@ public class BookServiceTest {
     private BookServiceImpl bookServiceImpl;
 
     @Test
-    public void testGetAllBooks() throws Exception {
+    public void testGetAllBooks() {
         // Create a list of mock Book entities
         List<Book> entityList = creatEntityList();
         // Stubbing the behavior of the repository to return the mock entity list
@@ -67,7 +67,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testGetBookById_EntityFound() throws Exception {
+    public void testGetBookById_EntityFound() {
         Book book = creatEntityList().get(0);
         // Stubbing repository behavior
         when(bookRepo.findById(book.getId())).thenReturn(Optional.of(book));
@@ -95,7 +95,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testCreateBook() throws BadRequestException, Exception {
+    public void testCreateBook() throws BadRequestException {
         // Prepare test data
         RequestBookDto requestBookDto = RequestBookDto.builder()
                 .author("author-1")
@@ -189,7 +189,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testDeleteBook_SuccessfulDeletion() throws Exception {
+    public void testDeleteBook_SuccessfulDeletion() {
         // Prepare test data
         Long id = 1L;
         Book book = creatEntityList().get(0);
