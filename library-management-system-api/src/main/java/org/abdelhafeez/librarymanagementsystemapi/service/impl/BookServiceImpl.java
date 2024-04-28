@@ -1,7 +1,9 @@
 package org.abdelhafeez.librarymanagementsystemapi.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.abdelhafeez.librarymanagementsystemapi.entity.Book;
 import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
 import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
 import org.abdelhafeez.librarymanagementsystemapi.repo.BookRepo;
@@ -27,8 +29,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public ResponseBookDto getBookById(Long id) throws Exception, ResourceNotFoundException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getBookById'");
+        Optional<Book> optional = bookRepo.findById(id);
+        if (!optional.isPresent())
+            throw new ResourceNotFoundException("Book", "Id", id);
+        return beanMapper.mapEntityToDto(optional.get(), ResponseBookDto.class);
     }
 
     @Override
