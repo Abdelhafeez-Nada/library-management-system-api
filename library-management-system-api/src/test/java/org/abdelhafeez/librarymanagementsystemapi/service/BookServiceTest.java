@@ -1,6 +1,8 @@
 package org.abdelhafeez.librarymanagementsystemapi.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -226,6 +228,25 @@ public class BookServiceTest {
         // Call the method under test and assert that it throws
         // ResourceNotFoundException
         assertThrows(BadRequestException.class, () -> bookServiceImpl.updateBook(id, dto));
+    }
+
+    @Test
+    public void testSoftDeleteBook_SuccessfulDeletion() {
+        // Prepare test data
+        Long id = 1L;
+        Book book = creatEntityList().get(0);
+        when(bookRepo.findById(id)).thenReturn(Optional.of(book));
+
+        // Call the method under test
+        assertDoesNotThrow(() -> bookServiceImpl.deleteBook(id));
+
+        // Verify that findById and save methods of the repository were called once with
+        // the correct ID and book
+        verify(bookRepo, times(1)).findById(id);
+        verify(bookRepo, times(1)).save(book);
+
+        // Assert that the book's enabled status is set to false
+        assertFalse(book.getEnabled());
     }
 
     @Test
