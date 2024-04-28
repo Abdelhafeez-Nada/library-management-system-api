@@ -82,10 +82,21 @@ public class PatronServiceImpl implements PatronService {
                 .orElseThrow(() -> new ResourceNotFoundException("Patron", "Id", id));
     }
 
+    /**
+     * Creates a new patron.
+     * 
+     * @param dto The RequestPatronDto containing information about the patron to be
+     *            created.
+     * @return The ResponsePatronDto representing the newly created patron.
+     * @throws BadRequestException If the request is malformed or contains invalid
+     *                             data.
+     */
     @Override
     public ResponsePatronDto createPatron(RequestPatronDto dto) throws BadRequestException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createPatron'");
+        // Save the patron entity to the repository
+        Patron saved = patronRepo.save(beanMapper.mapDtoToEntity(dto, Patron.class));
+        // Map the saved patron entity to a DTO and return it
+        return beanMapper.mapEntityToDto(saved, ResponsePatronDto.class);
     }
 
     @Override
