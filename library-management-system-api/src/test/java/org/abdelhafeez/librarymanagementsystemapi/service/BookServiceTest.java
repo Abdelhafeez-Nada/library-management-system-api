@@ -26,6 +26,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
@@ -63,6 +67,42 @@ public class BookServiceTest {
             assertEquals(entityList.get(i).getTitle(), dtoList.get(i).getTitle());
             assertEquals(entityList.get(i).getIsbn(), dtoList.get(i).getIsbn());
             assertEquals(entityList.get(i).getAuthor(), dtoList.get(i).getAuthor());
+        }
+    }
+
+    @Test
+    public void testGetAllBooks_pagination() {
+        // Prepare mock data
+        // Create a list of mock Book entities
+        List<Book> entityList = creatEntityList();
+        // Create a list of mock ResponseBookDto objects
+        List<ResponseBookDto> dtoList = createDtoList();
+        // Create a pageable object for the first page with one item per page
+        Pageable pageable = PageRequest.of(0, 1);
+        // Create a mock Page<Book> object
+        Page<Book> bookPage = new PageImpl<>(entityList);
+        // Mock behavior of bookRepo to return the mock Page<Book> object when findAll
+        // method is called with the provided pageable
+        when(bookRepo.findAll(pageable)).thenReturn(bookPage);
+        // Mock behavior of beanMapper to return the mock ResponseBookDto list when
+        // mapEntityListToDtoList is called
+        when(beanMapper.mapEntityListToDtoList(bookPage.getContent(), ResponseBookDto.class)).thenReturn(dtoList);
+        // Call the method to be tested
+        Page<ResponseBookDto> result = bookServiceImpl.getAllBooks(pageable.getPageNumber(), pageable.getPageSize());
+        // Verify that bookRepo.findAll was called once with the provided pageable
+        verify(bookRepo, times(1)).findAll(pageable);
+        // Verify that beanMapper.mapEntityListToDtoList was called once with the
+        // content of the mock page
+        verify(beanMapper, times(1)).mapEntityListToDtoList(bookPage.getContent(), ResponseBookDto.class);
+        // Ensure that the total number of elements in the result matches the size of
+        // the DTO list
+        assertEquals(result.getTotalElements(), dtoList.size());
+        // Get the content of the result page
+        List<ResponseBookDto> resultContent = result.getContent();
+        for (int i = 0; i < resultContent.size(); i++) {
+            // Ensure that each DTO in the result matches the corresponding DTO in the DTO
+            // list
+            assertEquals(dtoList.get(i), resultContent.get(i));
         }
     }
 
