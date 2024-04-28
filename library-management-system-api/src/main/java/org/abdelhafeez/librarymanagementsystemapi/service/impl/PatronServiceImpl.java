@@ -135,6 +135,7 @@ public class PatronServiceImpl implements PatronService {
     }
 
     @Override
+    @Transactional
     public void deletePatron(Long id) throws ResourceNotFoundException, BadRequestException {
         // Input Validation
         if (id == null)
@@ -144,7 +145,9 @@ public class PatronServiceImpl implements PatronService {
         if (!optionalPatron.isPresent())
             throw new ResourceNotFoundException("Patron", "Id", id);
         // Delete the patron entity from the repository
-        patronRepo.deleteById(id);
+        Patron patron = optionalPatron.get();
+        patron.setEnabled(false);
+        patronRepo.save(patron);
     }
 
 }
