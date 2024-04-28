@@ -1,5 +1,8 @@
 package org.abdelhafeez.librarymanagementsystemapi.service.impl;
 
+import java.util.Date;
+import java.util.Optional;
+
 import org.abdelhafeez.librarymanagementsystemapi.entity.Book;
 import org.abdelhafeez.librarymanagementsystemapi.entity.BorrowingRecord;
 import org.abdelhafeez.librarymanagementsystemapi.entity.Patron;
@@ -78,13 +81,22 @@ public class BorrowingServiceImpl implements BorrowingService {
     @Transactional(rollbackFor = { ResourceNotFoundException.class, BadRequestException.class, RuntimeException.class,
             Exception.class })
     public void returnBook(Long bookId, Long patronId) throws BadRequestException, ResourceNotFoundException {
-        // Check if both book and patron exist
-        bookService.getBookById(bookId);
-        patronService.getPatronById(patronId);
-        // Update return date in borrowing record
-        borrowingRepo.updateReturnDate(bookId, patronId);
-        // Mark the book as available
+
+        Optional<BorrowingRecord> borrowingOptional = borrowingRepo.findByBookIdAndPatronIdAndReturnDateIsNull(bookId,
+                patronId);
+        if (!borrowingOptional.isPresent())
+            throw new BadRequestException("there is no borrowin record");
+        BorrowingRecord borrowingRecord = borrowingOptional.get();
+        borrowingRecord.setReturnDate(new Date());
         bookService.makeBookAvailable(bookId);
+
+        // // Check if both book and patron exist
+        // bookService.getBookById(bookId);
+        // patronService.getPatronById(patronId);
+        // // Update return date in borrowing record
+        // borrowingRepo.updateReturnDate(bookId, patronId);
+        // // Mark the book as available
+        // bookService.makeBookAvailable(bookId);
     }
 
 }
