@@ -2,6 +2,7 @@ package org.abdelhafeez.librarymanagementsystemapi.service.impl;
 
 import java.util.List;
 
+import org.abdelhafeez.librarymanagementsystemapi.entity.Patron;
 import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
 import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
 import org.abdelhafeez.librarymanagementsystemapi.repo.PatronRepo;
@@ -22,10 +23,17 @@ public class PatronServiceImpl implements PatronService {
 
     private final BeanMapper beanMapper;
 
+    /**
+     * Retrieves all patrons available in the system.
+     * 
+     * @return A list of ResponsePatronDto representing all patrons.
+     */
     @Override
     public List<ResponsePatronDto> getAllPatrons() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllPatrons'");
+        // Retrieve all patrons from the repository
+        List<Patron> allPatrons = patronRepo.findAll();
+        // Map the list of patron entities to a list of DTOs and return it
+        return beanMapper.mapEntityListToDtoList(allPatrons, ResponsePatronDto.class);
     }
 
     @Override
