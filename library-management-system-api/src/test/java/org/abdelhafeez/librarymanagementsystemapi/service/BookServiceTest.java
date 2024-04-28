@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -259,6 +260,17 @@ public class BookServiceTest {
         // Verify that repository method was called with the correct ID
         verify(bookRepo, times(1)).findById(id);
         // Verify that repository's save method was not called
+        verify(bookRepo, never()).save(any());
+    }
+
+    @Test
+    public void testSoftDeleteBook_InvalidInputParameter() {
+        // Prepare test data
+        Long id = null;
+        // Call the method under test and assert that it throws BadRequestException
+        assertThrows(BadRequestException.class, () -> bookServiceImpl.deleteBook(id));
+        // Verify that repository method was not called
+        verify(bookRepo, never()).findById(anyLong());
         verify(bookRepo, never()).save(any());
     }
 
