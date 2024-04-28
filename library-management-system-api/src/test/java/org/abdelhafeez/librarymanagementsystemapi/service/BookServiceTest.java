@@ -188,6 +188,22 @@ public class BookServiceTest {
         assertThrows(BadRequestException.class, () -> bookServiceImpl.updateBook(id, dto));
     }
 
+    @Test
+    public void testDeleteBook_SuccessfulDeletion() throws Exception {
+        // Prepare test data
+        Long id = 1L;
+        Book book = creatEntityList().get(0);
+        when(bookRepo.findById(id)).thenReturn(Optional.of(book));
+        // Call the method under test
+        bookServiceImpl.deleteBook(id);
+        // Verify that the findById method of the repository was called once with the
+        // correct ID
+        verify(bookRepo, times(1)).findById(id);
+        // Verify that the deleteById method of the repository was called once with the
+        // correct ID
+        verify(bookRepo, times(1)).deleteById(id);
+    }
+
     private List<Book> creatEntityList() {
         // create list of entity
         Book bookEntity1 = Book.builder()
