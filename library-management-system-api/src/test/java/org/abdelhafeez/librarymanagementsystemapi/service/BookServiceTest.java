@@ -178,6 +178,16 @@ public class BookServiceTest {
         verify(bookRepo, times(1)).findById(id);
     }
 
+    @Test
+    public void testUpdateBook_InvalidInputParameter() {
+        // Prepare test data
+        Long id = null;
+        RequestBookDto dto = RequestBookDto.builder().build();
+        // Call the method under test and assert that it throws
+        // ResourceNotFoundException
+        assertThrows(BadRequestException.class, () -> bookServiceImpl.updateBook(id, dto));
+    }
+
     private List<Book> creatEntityList() {
         // create list of entity
         Book bookEntity1 = Book.builder()
