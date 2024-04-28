@@ -6,10 +6,13 @@ import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
 import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.RequestBookDto;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.ResponseBookDto;
+import org.springframework.data.domain.Page;
 
 public interface BookService {
 
     public List<ResponseBookDto> getAllBooks();
+
+    public Page<ResponseBookDto> getAllBooks(int page, int size);
 
     public ResponseBookDto getBookById(Long id) throws ResourceNotFoundException;
 
