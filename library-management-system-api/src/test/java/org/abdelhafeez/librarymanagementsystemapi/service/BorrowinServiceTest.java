@@ -1,8 +1,10 @@
 package org.abdelhafeez.librarymanagementsystemapi.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -54,6 +56,22 @@ public class BorrowinServiceTest {
         // Verify interactions
         verify(borrowingRepo, times(1)).save(any(BorrowingRecord.class));
         verify(bookService, times(1)).makeBookUnAvailable(1L);
+    }
+
+    @Test
+    public void testBorrowBook_NotAvailableBook() throws BadRequestException, ResourceNotFoundException {
+        // Mock book to be not available
+        ResponseBookDto book = new ResponseBookDto();
+        book.setAvailable(false);
+        book.setEnabled(true);
+        // Mock behavior of bookService
+        when(bookService.getBookById(anyLong())).thenReturn(book);
+        // Call the method and assert BadRequestException is thrown
+        assertThrows(BadRequestException.class, () -> borrowingService.borrowBook(1L, 2L));
+        // Ensure that borrowingRepo.save() and bookService.makeBookUnAvailable() are
+        // not called
+        verify(borrowingRepo, never()).save(any(BorrowingRecord.class));
+        verify(bookService, never()).makeBookUnAvailable(anyLong());
     }
 
 }
