@@ -20,4 +20,6 @@ public interface PatronService {
 
     public ResponsePatronDto updatePatron(Long id, RequestPatronDto dto)
             throws ResourceNotFoundException, BadRequestException;
+
+    public void deletePatron(Long id) throws ResourceNotFoundException, BadRequestException;
 }
