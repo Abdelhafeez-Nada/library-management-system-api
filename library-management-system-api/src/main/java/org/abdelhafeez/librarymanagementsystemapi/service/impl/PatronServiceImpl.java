@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
 
@@ -99,11 +100,38 @@ public class PatronServiceImpl implements PatronService {
         return beanMapper.mapEntityToDto(saved, ResponsePatronDto.class);
     }
 
+    /**
+     * Updates the details of a patron with the specified ID.
+     *
+     * @param id  The ID of the patron to be updated.
+     * @param dto The RequestPatronDto containing the updated information of the
+     *            patron.
+     * @return The ResponsePatronDto representing the updated patron.
+     * @throws ResourceNotFoundException If the patron with the given ID is not
+     *                                   found.
+     * @throws BadRequestException       If the request is malformed or contains
+     *                                   invalid data.
+     */
     @Override
+    @Transactional(rollbackFor = { ResourceNotFoundException.class, BadRequestException.class })
     public ResponsePatronDto updatePatron(Long id, RequestPatronDto dto)
             throws ResourceNotFoundException, BadRequestException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updatePatron'");
+        // Input Validation
+        if (id == null || dto == null)
+            throw new BadRequestException("Invalid input parameters");
+        // Check Existence of Entity
+        Optional<Patron> optionalPatron = patronRepo.findById(id);
+        if (!optionalPatron.isPresent())
+            throw new ResourceNotFoundException("Patron", "Id", id);
+        // Retrieve the patron entity from the repository
+        Patron patron = optionalPatron.get();
+        // Update the patron entity with the new information
+        patron.setName(dto.getName());
+        patron.setContactInfo(dto.getContactInfo());
+        // Save the changes to the repository
+        Patron updatedPatron = patronRepo.save(patron);
+        // Map the updated patron entity to a DTO and return it
+        return beanMapper.mapEntityToDto(updatedPatron, ResponsePatronDto.class);
     }
 
     @Override
