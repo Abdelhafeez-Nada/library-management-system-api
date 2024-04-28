@@ -8,7 +8,9 @@ import org.abdelhafeez.librarymanagementsystemapi.service.contract.PatronService
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.RequestPatronDto;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.ResponsePatronDto;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PatronServiceImpl implements PatronService {
 
     @Override
