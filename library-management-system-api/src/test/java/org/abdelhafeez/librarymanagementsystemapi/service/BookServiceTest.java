@@ -126,6 +126,44 @@ public class BookServiceTest {
         assertEquals(responseBookDto, createdBookDto);
     }
 
+    @Test
+    public void testUpdateBook_SuccessfulUpdate() {
+        // Prepare test data
+        Long id = 1L;
+        RequestBookDto requestBookDto = RequestBookDto.builder()
+                .author("updated_author-1")
+                .title("updated_title-1")
+                .isbn("updated_isbn-1")
+                .publicationYear(Short.valueOf("2023"))
+                .build();
+        ResponseBookDto expectedResponse = createDtoList().get(0);
+        expectedResponse.setAuthor(requestBookDto.getAuthor());
+        expectedResponse.setTitle(requestBookDto.getTitle());
+        expectedResponse.setIsbn(requestBookDto.getIsbn());
+        expectedResponse.setPublicationYear(requestBookDto.getPublicationYear());
+        Book originalBook = creatEntityList().get(0);
+        // Update the original book with values from the request DTO
+        originalBook.setAuthor(requestBookDto.getAuthor());
+        originalBook.setTitle(requestBookDto.getTitle());
+        originalBook.setIsbn(requestBookDto.getIsbn());
+        originalBook.setPublicationYear(requestBookDto.getPublicationYear());
+        // Stub repository behavior
+        when(bookRepo.findById(id)).thenReturn(Optional.of(originalBook));
+        when(bookRepo.save(originalBook)).thenReturn(originalBook);
+        // Stub mapper behavior
+        when(beanMapper.mapEntityToDto(originalBook, ResponseBookDto.class)).thenReturn(expectedResponse);
+        // Call the method under test
+        ResponseBookDto updated = bookServiceImpl.updateBook(id, requestBookDto);
+
+        // Assert that result is correct
+        assertEquals(expectedResponse, updated);
+        // Verify repository method calls
+        verify(bookRepo, times(1)).findById(id);
+        verify(bookRepo, times(1)).save(originalBook);
+        // Verify mapper method call
+        verify(beanMapper, times(1)).mapEntityToDto(originalBook, ResponseBookDto.class);
+    }
+
     private List<Book> creatEntityList() {
         // create list of entity
         Book bookEntity1 = Book.builder()
