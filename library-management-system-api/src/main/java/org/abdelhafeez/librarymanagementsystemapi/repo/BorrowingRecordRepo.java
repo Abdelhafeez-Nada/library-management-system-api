@@ -19,5 +19,5 @@ public interface BorrowingRecordRepo extends JpaRepository<BorrowingRecord, Long
     public int updateReturnDate(@Param("bookId") long bookId, @Param("patronId") long patronId);
 
     // query method to find borrowing records by bookId and patronId
-    List<BorrowingRecord> findByBookIdAndPatronId(Long bookId, Long patronId);
+    List<BorrowingRecord> findByBookIdAndPatronIdAndReturnDateIsNull(Long bookId, Long patronId);
 }
