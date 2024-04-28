@@ -47,14 +47,12 @@ public class BookServiceImpl implements BookService {
     public ResponseBookDto updateBook(Long id, RequestBookDto dto)
             throws ResourceNotFoundException, BadRequestException {
         // Input Validation
-        if (id == null || dto == null) {
+        if (id == null || dto == null)
             throw new BadRequestException("Invalid input parameters");
-        }
         // Check Existence of Entity
         Optional<Book> optionalBook = bookRepo.findById(id);
-        if (!optionalBook.isPresent()) {
+        if (!optionalBook.isPresent())
             throw new ResourceNotFoundException("Book", "Id", id);
-        }
         // Update Entity
         Book book = optionalBook.get();
         book.setTitle(dto.getTitle());
