@@ -26,32 +26,65 @@ public class BorrowingServiceImpl implements BorrowingService {
 
     private final PatronService patronService;
 
+    /**
+     * Borrow a book for a patron.
+     *
+     * @param bookId   The ID of the book to be borrowed.
+     * @param patronId The ID of the patron borrowing the book.
+     * @throws BadRequestException       If the request is invalid.
+     * @throws ResourceNotFoundException If the requested resource is not found.
+     */
     @Override
     @Transactional(rollbackFor = { ResourceNotFoundException.class, BadRequestException.class, RuntimeException.class,
             Exception.class })
     public void borrowBook(Long bookId, Long patronId) throws BadRequestException, ResourceNotFoundException {
+        // Retrieve book information
         ResponseBookDto book = bookService.getBookById(bookId);
+        // Retrieve patron information
         ResponsePatronDto patron = patronService.getPatronById(patronId);
+        // Check if the book is available for borrowing
         if (!book.getAvailable())
             throw new BadRequestException("Book Not Returned Yet!");
+        // Check if the book is enabled
         if (!book.getEnabled())
             throw new BadRequestException("Book Not Enabled!");
+        // Check if the patron is enabled
         if (!patron.getEnabled())
             throw new BadRequestException("Patron Not Enabled!");
+        // Create book entity
         Book bookEntity = Book.builder().id(bookId).build();
+        // Create patron entity
         Patron patronEntity = Patron.builder().id(patronId).build();
-        BorrowingRecord boorrowEntity = BorrowingRecord.builder()
+        // Create borrowing record entity
+        BorrowingRecord borrowingEntity = BorrowingRecord.builder()
                 .book(bookEntity)
                 .patron(patronEntity)
                 .build();
-        borrowingRepo.save(boorrowEntity);
+        // Save borrowing record
+        borrowingRepo.save(borrowingEntity);
+        // Mark the book as unavailable
         bookService.makeBookUnAvailable(bookId);
     }
 
+    /**
+     * Return a borrowed book.
+     *
+     * @param bookId   The ID of the book to be returned.
+     * @param patronId The ID of the patron returning the book.
+     * @throws BadRequestException       If the request is invalid.
+     * @throws ResourceNotFoundException If the requested resource is not found.
+     */
     @Override
+    @Transactional(rollbackFor = { ResourceNotFoundException.class, BadRequestException.class, RuntimeException.class,
+            Exception.class })
     public void returnBook(Long bookId, Long patronId) throws BadRequestException, ResourceNotFoundException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'returnBook'");
+        // Check if both book and patron exist
+        bookService.getBookById(bookId);
+        patronService.getPatronById(patronId);
+        // Update return date in borrowing record
+        borrowingRepo.updateReturnDate(bookId, patronId);
+        // Mark the book as available
+        bookService.makeBookAvailable(bookId);
     }
 
 }
