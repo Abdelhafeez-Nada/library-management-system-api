@@ -135,7 +135,7 @@ public class PatronServiceImpl implements PatronService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = { ResourceNotFoundException.class, BadRequestException.class })
     public void deletePatron(Long id) throws ResourceNotFoundException, BadRequestException {
         // Input Validation
         if (id == null)

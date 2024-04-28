@@ -140,6 +140,7 @@ public class BookServiceImpl implements BookService {
      *                                   invalid data.
      */
     @Override
+    @Transactional(rollbackFor = { ResourceNotFoundException.class, BadRequestException.class })
     public void deleteBook(Long id) throws ResourceNotFoundException, BadRequestException {
         // Input Validation
         if (id == null)
