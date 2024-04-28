@@ -66,8 +66,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBook(Long id) throws Exception, ResourceNotFoundException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteBook'");
+    public void deleteBook(Long id) throws Exception, ResourceNotFoundException, BadRequestException {
+        // Input Validation
+        if (id == null)
+            throw new BadRequestException("Invalid input parameters");
+        // Check Existence of Entity
+        Optional<Book> optionalBook = bookRepo.findById(id);
+        if (!optionalBook.isPresent())
+            throw new ResourceNotFoundException("Book", "Id", id);
+        bookRepo.deleteById(id);
     }
 }
