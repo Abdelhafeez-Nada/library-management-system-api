@@ -11,6 +11,9 @@ import org.abdelhafeez.librarymanagementsystemapi.util.BeanMapper;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.RequestPatronDto;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.ResponsePatronDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -36,10 +39,27 @@ public class PatronServiceImpl implements PatronService {
         return beanMapper.mapEntityListToDtoList(allPatrons, ResponsePatronDto.class);
     }
 
+    /**
+     * Retrieves a page of patrons.
+     * 
+     * @param page the page number (zero-based) to retrieve
+     * @param size the size of the page to retrieve
+     * @return a {@link org.springframework.data.domain.Page} of
+     *         {@link ResponsePatronDto} objects representing the patrons in the
+     *         specified page
+     */
     @Override
     public Page<ResponsePatronDto> getAllPatrons(int page, int size) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllPatrons'");
+        // Create a Pageable object specifying the page number and size
+        Pageable pageable = PageRequest.of(page, size);
+        // Retrieve a page of Patron entities from the repository based on the provided
+        // pagination information
+        Page<Patron> patronPage = patronRepo.findAll(pageable);
+        // Map each Patron entity to a ResponsePatronDto
+        List<ResponsePatronDto> dtoList = beanMapper.mapEntityListToDtoList(patronPage.getContent(),
+                ResponsePatronDto.class);
+        // Create and return page of ResponsePatronDto
+        return new PageImpl<ResponsePatronDto>(dtoList, pageable, patronPage.getTotalElements());
     }
 
     @Override
