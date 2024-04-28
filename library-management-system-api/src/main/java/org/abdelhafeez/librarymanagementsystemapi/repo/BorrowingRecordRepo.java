@@ -1,6 +1,7 @@
 package org.abdelhafeez.librarymanagementsystemapi.repo;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.abdelhafeez.librarymanagementsystemapi.entity.BorrowingRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,5 +20,5 @@ public interface BorrowingRecordRepo extends JpaRepository<BorrowingRecord, Long
     public int updateReturnDate(@Param("bookId") long bookId, @Param("patronId") long patronId);
 
     // query method to find borrowing records by bookId and patronId
-    List<BorrowingRecord> findByBookIdAndPatronIdAndReturnDateIsNull(Long bookId, Long patronId);
+    Optional<BorrowingRecord> findByBookIdAndPatronIdAndReturnDateIsNull(Long bookId, Long patronId);
 }
