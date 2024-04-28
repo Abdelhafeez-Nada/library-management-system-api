@@ -82,21 +82,33 @@ public class BorrowingServiceImpl implements BorrowingService {
             Exception.class })
     public void returnBook(Long bookId, Long patronId) throws BadRequestException, ResourceNotFoundException {
 
+        // get borrowing record
         Optional<BorrowingRecord> borrowingOptional = borrowingRepo.findByBookIdAndPatronIdAndReturnDateIsNull(bookId,
                 patronId);
         if (!borrowingOptional.isPresent())
             throw new BadRequestException("there is no borrowin record");
         BorrowingRecord borrowingRecord = borrowingOptional.get();
+        // update borrowing record
         borrowingRecord.setReturnDate(new Date());
+        // save borrowingRecord entity
+        borrowingRepo.save(borrowingRecord);
+        // update book availability
         bookService.makeBookAvailable(bookId);
-
-        // // Check if both book and patron exist
-        // bookService.getBookById(bookId);
-        // patronService.getPatronById(patronId);
-        // // Update return date in borrowing record
-        // borrowingRepo.updateReturnDate(bookId, patronId);
-        // // Mark the book as available
-        // bookService.makeBookAvailable(bookId);
     }
+
+    // @Override
+    // @Transactional(rollbackFor = { ResourceNotFoundException.class,
+    // BadRequestException.class, RuntimeException.class,
+    // Exception.class })
+    // public void returnBook(Long bookId, Long patronId) throws
+    // BadRequestException, ResourceNotFoundException {
+    // // Check if both book and patron exist
+    // bookService.getBookById(bookId);
+    // patronService.getPatronById(patronId);
+    // // Update return date in borrowing record
+    // borrowingRepo.updateReturnDate(bookId, patronId);
+    // // Mark the book as available
+    // bookService.makeBookAvailable(bookId);
+    // }
 
 }
