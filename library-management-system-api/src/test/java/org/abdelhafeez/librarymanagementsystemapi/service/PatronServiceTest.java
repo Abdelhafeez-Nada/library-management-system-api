@@ -220,6 +220,22 @@ public class PatronServiceTest {
         assertThrows(BadRequestException.class, () -> patronServiceImpl.updatePatron(id, dto));
     }
 
+    @Test
+    public void testDeletePatron_SuccessfulDeletion() {
+        // Prepare test data
+        Long id = 1L;
+        Patron patron = createEntityList().get(0);
+        when(patronRepo.findById(id)).thenReturn(Optional.of(patron));
+        // Call the method under test
+        patronServiceImpl.deletePatron(id);
+        // Verify that the findById method of the repository was called once with the
+        // correct ID
+        verify(patronRepo, times(1)).findById(id);
+        // Verify that the deleteById method of the repository was called once with the
+        // correct ID
+        verify(patronRepo, times(1)).deleteById(id);
+    }
+
     private List<Patron> createEntityList() {
         Patron patron1 = Patron.builder()
                 .id(1l)
