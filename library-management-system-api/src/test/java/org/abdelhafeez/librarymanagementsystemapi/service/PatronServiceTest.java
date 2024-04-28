@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -236,6 +237,21 @@ public class PatronServiceTest {
         verify(patronRepo, times(1)).save(patron);
         // Assert that the patron's enabled status is set to false
         assertFalse(patron.getEnabled());
+    }
+
+    @Test
+    public void testSoftDeletePatron_EntityNotFound() {
+        // Prepare test data
+        long id = 1L;
+        // Stubbing repository behavior
+        when(patronRepo.findById(id)).thenReturn(Optional.empty());
+        // Call the method under test and assert that it throws
+        // ResourceNotFoundException
+        assertThrows(ResourceNotFoundException.class, () -> patronServiceImpl.deletePatron(id));
+        // Verify that repository method was called with the correct ID
+        verify(patronRepo, times(1)).findById(id);
+        // Verify that repository's save method was not called
+        verify(patronRepo, never()).save(any());
     }
 
     @Test
