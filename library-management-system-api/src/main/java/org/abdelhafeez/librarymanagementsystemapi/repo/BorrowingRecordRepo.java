@@ -1,6 +1,5 @@
 package org.abdelhafeez.librarymanagementsystemapi.repo;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.abdelhafeez.librarymanagementsystemapi.entity.BorrowingRecord;
