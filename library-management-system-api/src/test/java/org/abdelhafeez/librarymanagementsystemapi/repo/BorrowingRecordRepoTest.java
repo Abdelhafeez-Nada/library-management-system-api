@@ -2,8 +2,11 @@ package org.abdelhafeez.librarymanagementsystemapi.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.abdelhafeez.librarymanagementsystemapi.entity.Book;
 import org.abdelhafeez.librarymanagementsystemapi.entity.BorrowingRecord;
@@ -75,6 +78,24 @@ public class BorrowingRecordRepoTest {
         // assert that updates are commited successfully
         assertEquals(borrowingRecord.getId(), updatedRecord.getId());
         assertEquals(borrowingRecord.getReturnDate(), updatedRecord.getReturnDate());
+    }
+
+    @Test
+    @Transactional
+    public void testFindByBookIdAndPatronIdAndReturnDateIsNull() {
+        // save borrowing rcord
+        borrowingRecordRepo.save(borrowingRecord);
+        // Find borrowing record by bookId, patronId, and null returnDate
+        Optional<BorrowingRecord> foundRecordOptional = borrowingRecordRepo
+                .findByBookIdAndPatronIdAndReturnDateIsNull(book.getId(), patron.getId());
+
+        // Assert that a borrowing record was found
+        assertTrue(foundRecordOptional.isPresent());
+        BorrowingRecord foundRecord = foundRecordOptional.get();
+        assertEquals(borrowingRecord.getId(), foundRecord.getId());
+        assertEquals(book.getId(), foundRecord.getBook().getId());
+        assertEquals(patron.getId(), foundRecord.getPatron().getId());
+        assertNull(foundRecord.getReturnDate());
     }
 
 }
