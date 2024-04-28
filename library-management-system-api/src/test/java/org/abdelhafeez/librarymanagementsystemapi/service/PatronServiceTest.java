@@ -2,6 +2,7 @@ package org.abdelhafeez.librarymanagementsystemapi.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.abdelhafeez.librarymanagementsystemapi.entity.Patron;
+import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
 import org.abdelhafeez.librarymanagementsystemapi.repo.PatronRepo;
 import org.abdelhafeez.librarymanagementsystemapi.service.impl.PatronServiceImpl;
 import org.abdelhafeez.librarymanagementsystemapi.util.BeanMapper;
@@ -114,6 +116,19 @@ public class PatronServiceTest {
         verify(patronRepo, times(1)).findById(patron.getId());
         // Assert that the returned DTO is not null
         assertNotNull(responsePatronDto);
+    }
+
+    @Test
+    public void testGetPatronById_EntityNotFound() {
+        // Prepare test data
+        long id = 1L;
+        // Stubbing repository behavior
+        when(patronRepo.findById(id)).thenReturn(Optional.empty());
+        // Call the method under test and assert that it throws
+        // ResourceNotFoundException
+        assertThrows(ResourceNotFoundException.class, () -> patronServiceImpl.getPatronById(id));
+        // Verify that repository method was called with the correct ID
+        verify(patronRepo, times(1)).findById(id);
     }
 
     private List<Patron> createEntityList() {
