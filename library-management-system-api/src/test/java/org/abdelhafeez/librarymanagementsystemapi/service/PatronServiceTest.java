@@ -164,6 +164,38 @@ public class PatronServiceTest {
         assertEquals(responsePatronDto, createdPatronDto);
     }
 
+    @Test
+    public void testUpdatePatron_SuccessfulUpdate() {
+        // Prepare test data
+        Long id = 1L;
+        RequestPatronDto requestPatronDto = RequestPatronDto.builder()
+                .name("updated_name-1")
+                .contactInfo("updated_contact-1")
+                .build();
+        ResponsePatronDto expectedResponse = createDtoList().get(0);
+        expectedResponse.setName(requestPatronDto.getName());
+        expectedResponse.setContactInfo(requestPatronDto.getContactInfo());
+        Patron originalPatron = createEntityList().get(0);
+        // Update the original patron with values from the request DTO
+        originalPatron.setName(requestPatronDto.getName());
+        originalPatron.setContactInfo(requestPatronDto.getContactInfo());
+        // Stub repository behavior
+        when(patronRepo.findById(id)).thenReturn(Optional.of(originalPatron));
+        when(patronRepo.save(originalPatron)).thenReturn(originalPatron);
+        // Stub mapper behavior
+        when(beanMapper.mapEntityToDto(originalPatron, ResponsePatronDto.class)).thenReturn(expectedResponse);
+        // Call the method under test
+        ResponsePatronDto updated = patronServiceImpl.updatePatron(id, requestPatronDto);
+
+        // Assert that result is correct
+        assertEquals(expectedResponse, updated);
+        // Verify repository method calls
+        verify(patronRepo, times(1)).findById(id);
+        verify(patronRepo, times(1)).save(originalPatron);
+        // Verify mapper method call
+        verify(beanMapper, times(1)).mapEntityToDto(originalPatron, ResponsePatronDto.class);
+    }
+
     private List<Patron> createEntityList() {
         Patron patron1 = Patron.builder()
                 .id(1l)
