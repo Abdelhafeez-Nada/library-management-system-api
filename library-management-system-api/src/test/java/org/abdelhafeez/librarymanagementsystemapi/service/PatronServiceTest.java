@@ -19,6 +19,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 public class PatronServiceTest {
@@ -55,6 +59,44 @@ public class PatronServiceTest {
             assertEquals(entityList.get(i).getId(), dtoList.get(i).getId());
             assertEquals(entityList.get(i).getName(), dtoList.get(i).getName());
             assertEquals(entityList.get(i).getContactInfo(), dtoList.get(i).getContactInfo());
+        }
+    }
+
+    @Test
+    public void testGetAllPatrons_pagination() {
+        // Prepare mock data
+        // Create a list of mock Patron entities
+        List<Patron> entityList = createEntityList();
+        // Create a list of mock ResponsePatronDto objects
+        List<ResponsePatronDto> dtoList = createDtoList();
+        // Create a pageable object for the first page with one item per page
+        Pageable pageable = PageRequest.of(0, 1);
+        // Create a mock Page<Patron> object
+        Page<Patron> patronPage = new PageImpl<>(entityList);
+        // Mock behavior of patronRepo to return the mock Page<Patron> object when
+        // findAll
+        // method is called with the provided pageable
+        when(patronRepo.findAll(pageable)).thenReturn(patronPage);
+        // Mock behavior of beanMapper to return the mock ResponsePatronDto list when
+        // mapEntityListToDtoList is called
+        when(beanMapper.mapEntityListToDtoList(patronPage.getContent(), ResponsePatronDto.class)).thenReturn(dtoList);
+        // Call the method to be tested
+        Page<ResponsePatronDto> result = patronServiceImpl.getAllPatrons(pageable.getPageNumber(),
+                pageable.getPageSize());
+        // Verify that patronRepo.findAll was called once with the provided pageable
+        verify(patronRepo, times(1)).findAll(pageable);
+        // Verify that beanMapper.mapEntityListToDtoList was called once with the
+        // content of the mock page
+        verify(beanMapper, times(1)).mapEntityListToDtoList(patronPage.getContent(), ResponsePatronDto.class);
+        // Ensure that the total number of elements in the result matches the size of
+        // the DTO list
+        assertEquals(result.getTotalElements(), dtoList.size());
+        // Get the content of the result page
+        List<ResponsePatronDto> resultContent = result.getContent();
+        for (int i = 0; i < resultContent.size(); i++) {
+            // Ensure that each DTO in the result matches the corresponding DTO in the DTO
+            // list
+            assertEquals(dtoList.get(i), resultContent.get(i));
         }
     }
 
