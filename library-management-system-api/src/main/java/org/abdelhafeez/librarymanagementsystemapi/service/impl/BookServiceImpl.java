@@ -37,8 +37,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public ResponseBookDto createBook(RequestBookDto dto) throws Exception, BadRequestException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createBook'");
+        Book saved = bookRepo.save(beanMapper.mapDtoToEntity(dto, Book.class));
+        return beanMapper.mapEntityToDto(saved, ResponseBookDto.class);
     }
 
     @Override
