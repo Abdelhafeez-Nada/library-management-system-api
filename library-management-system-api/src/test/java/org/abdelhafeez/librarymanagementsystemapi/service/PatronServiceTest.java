@@ -196,6 +196,20 @@ public class PatronServiceTest {
         verify(beanMapper, times(1)).mapEntityToDto(originalPatron, ResponsePatronDto.class);
     }
 
+    @Test
+    public void testUpdatePatron_EntityNotFound() {
+        // Prepare test data
+        long id = 1L;
+        RequestPatronDto dto = RequestPatronDto.builder().build();
+        // Stubbing repository behavior
+        when(patronRepo.findById(id)).thenReturn(Optional.empty());
+        // Call the method under test and assert that it throws
+        // ResourceNotFoundException
+        assertThrows(ResourceNotFoundException.class, () -> patronServiceImpl.updatePatron(id, dto));
+        // Verify that repository method was called with the correct ID
+        verify(patronRepo, times(1)).findById(id);
+    }
+
     private List<Patron> createEntityList() {
         Patron patron1 = Patron.builder()
                 .id(1l)
