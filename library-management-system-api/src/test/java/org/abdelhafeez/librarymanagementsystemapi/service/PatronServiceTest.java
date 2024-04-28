@@ -1,6 +1,8 @@
 package org.abdelhafeez.librarymanagementsystemapi.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -218,6 +220,22 @@ public class PatronServiceTest {
         // Call the method under test and assert that it throws
         // ResourceNotFoundException
         assertThrows(BadRequestException.class, () -> patronServiceImpl.updatePatron(id, dto));
+    }
+
+    @Test
+    public void testSoftDeletePatron_SuccessfulDeletion() {
+        // Prepare test data
+        Long id = 1L;
+        Patron patron = createEntityList().get(0);
+        when(patronRepo.findById(id)).thenReturn(Optional.of(patron));
+        // Call the method under test
+        assertDoesNotThrow(() -> patronServiceImpl.deletePatron(id));
+        // Verify that findById and save methods of the repository were called once with
+        // the correct ID and patron
+        verify(patronRepo, times(1)).findById(id);
+        verify(patronRepo, times(1)).save(patron);
+        // Assert that the patron's enabled status is set to false
+        assertFalse(patron.getEnabled());
     }
 
     @Test
