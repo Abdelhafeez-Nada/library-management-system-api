@@ -23,4 +23,6 @@ public interface BookService {
 
     public void deleteBook(Long id) throws ResourceNotFoundException, BadRequestException;
 
+    public void makeBookUnAvailable(Long id) throws ResourceNotFoundException, BadRequestException;
+
 }
