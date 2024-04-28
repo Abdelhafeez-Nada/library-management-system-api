@@ -22,8 +22,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<ResponseBookDto> getAllBooks() throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllBooks'");
+        return beanMapper.mapEntityListToDtoList(bookRepo.findAll(), ResponseBookDto.class);
     }
 
     @Override
