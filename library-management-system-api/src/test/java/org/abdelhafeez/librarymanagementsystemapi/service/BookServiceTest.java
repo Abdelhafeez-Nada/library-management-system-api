@@ -164,6 +164,20 @@ public class BookServiceTest {
         verify(beanMapper, times(1)).mapEntityToDto(originalBook, ResponseBookDto.class);
     }
 
+    @Test
+    public void testUpdateBook_EntityNotFound() {
+        // Prepare test data
+        long id = 1L;
+        RequestBookDto dto = RequestBookDto.builder().build();
+        // Stubbing repository behavior
+        when(bookRepo.findById(id)).thenReturn(Optional.empty());
+        // Call the method under test and assert that it throws
+        // ResourceNotFoundException
+        assertThrows(ResourceNotFoundException.class, () -> bookServiceImpl.updateBook(id, dto));
+        // Verify that repository method was called with the correct ID
+        verify(bookRepo, times(1)).findById(id);
+    }
+
     private List<Book> creatEntityList() {
         // create list of entity
         Book bookEntity1 = Book.builder()
