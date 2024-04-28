@@ -111,15 +111,7 @@ public class BookServiceImpl implements BookService {
     @Transactional(rollbackFor = { ResourceNotFoundException.class, BadRequestException.class })
     public ResponseBookDto updateBook(Long id, RequestBookDto dto)
             throws ResourceNotFoundException, BadRequestException {
-        // Input Validation
-        if (id == null || dto == null)
-            throw new BadRequestException("Invalid input parameters");
-        // Check Existence of Entity
-        Optional<Book> optionalBook = bookRepo.findById(id);
-        if (!optionalBook.isPresent())
-            throw new ResourceNotFoundException("Book", "Id", id);
-        // Retrieve the book entity from the repository
-        Book book = optionalBook.get();
+        Book book = checkBookExistenceAndRetreive(id);
         // Update the book entity with the new information
         book.setTitle(dto.getTitle());
         book.setAuthor(dto.getAuthor());
@@ -142,6 +134,50 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(rollbackFor = { ResourceNotFoundException.class, BadRequestException.class })
     public void deleteBook(Long id) throws ResourceNotFoundException, BadRequestException {
+        Book book = checkBookExistenceAndRetreive(id);
+        book.setEnabled(false);
+        bookRepo.save(book);
+    }
+
+    /**
+     * Sets the availability of a book to "unavailable".
+     *
+     * @param id The ID of the book to make unavailable.
+     * @throws ResourceNotFoundException If the book with the given ID does not
+     *                                   exist.
+     * @throws BadRequestException       If the request is invalid.
+     */
+    @Override
+    public void makeBookUnAvailable(Long id) throws ResourceNotFoundException, BadRequestException {
+        // Retrieve the book with the given ID
+        Book book = checkBookExistenceAndRetreive(id);
+        // Set the availability of the book to "false" (unavailable)
+        book.setAvailable(false);
+        // Save the updated book to the database
+        bookRepo.save(book);
+        // Alternative method call
+        // bookRepo.makeBookUnAvailable(id);
+    }
+
+    /**
+     * Sets the availability of a book to "available".
+     *
+     * @param id The ID of the book to make available.
+     * @throws ResourceNotFoundException If the book with the given ID does not
+     *                                   exist.
+     * @throws BadRequestException       If the request is invalid.
+     */
+    @Override
+    public void makeBookAvailable(Long id) throws ResourceNotFoundException, BadRequestException {
+        // Retrieve the book with the given ID
+        Book book = checkBookExistenceAndRetreive(id);
+        // Set the availability of the book to "true" (available)
+        book.setAvailable(true);
+        // Save the updated book to the database
+        bookRepo.save(book);
+    }
+
+    private Book checkBookExistenceAndRetreive(Long id) throws BadRequestException, ResourceNotFoundException {
         // Input Validation
         if (id == null)
             throw new BadRequestException("Invalid input parameters");
@@ -149,15 +185,7 @@ public class BookServiceImpl implements BookService {
         Optional<Book> optionalBook = bookRepo.findById(id);
         if (!optionalBook.isPresent())
             throw new ResourceNotFoundException("Book", "Id", id);
-        // Soft Delete the book entity from the repository
-        Book book = optionalBook.get();
-        book.setEnabled(false);
-        bookRepo.save(book);
-    }
-
-    @Override
-    public void makeBookUnAvailable(Long id) throws ResourceNotFoundException, BadRequestException {
-        bookRepo.makeBookUnAvailable(id);
+        return optionalBook.get();
     }
 
 }
