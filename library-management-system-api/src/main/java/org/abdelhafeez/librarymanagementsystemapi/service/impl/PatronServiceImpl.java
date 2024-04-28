@@ -136,8 +136,15 @@ public class PatronServiceImpl implements PatronService {
 
     @Override
     public void deletePatron(Long id) throws ResourceNotFoundException, BadRequestException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deletePatron'");
+        // Input Validation
+        if (id == null)
+            throw new BadRequestException("Invalid input parameters");
+        // Check Existence of Entity
+        Optional<Patron> optionalPatron = patronRepo.findById(id);
+        if (!optionalPatron.isPresent())
+            throw new ResourceNotFoundException("Patron", "Id", id);
+        // Delete the patron entity from the repository
+        patronRepo.deleteById(id);
     }
 
 }
