@@ -25,4 +25,6 @@ public interface BookService {
 
     public void makeBookUnAvailable(Long id) throws ResourceNotFoundException, BadRequestException;
 
+    public void makeBookAvailable(Long id) throws ResourceNotFoundException, BadRequestException;
+
 }
