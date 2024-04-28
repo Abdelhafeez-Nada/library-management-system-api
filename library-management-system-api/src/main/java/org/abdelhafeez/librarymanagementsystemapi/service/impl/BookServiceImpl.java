@@ -155,4 +155,9 @@ public class BookServiceImpl implements BookService {
         bookRepo.save(book);
     }
 
+    @Override
+    public void makeBookUnAvailable(Long id) throws ResourceNotFoundException, BadRequestException {
+        bookRepo.makeBookUnAvailable(id);
+    }
+
 }
