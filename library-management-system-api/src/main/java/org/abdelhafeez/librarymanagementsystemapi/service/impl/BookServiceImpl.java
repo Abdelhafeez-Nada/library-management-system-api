@@ -39,6 +39,15 @@ public class BookServiceImpl implements BookService {
         return beanMapper.mapEntityListToDtoList(allBooks, ResponseBookDto.class);
     }
 
+    /**
+     * Retrieves a page of books.
+     * 
+     * @param page the page number (zero-based) to retrieve
+     * @param size the size of the page to retrieve
+     * @return a {@link org.springframework.data.domain.Page} of
+     *         {@link ResponseBookDto} objects representing the books in the
+     *         specified page
+     */
     @Override
     public Page<ResponseBookDto> getAllBooks(int page, int size) {
         // Create a Pageable object specifying the page number and size
