@@ -74,4 +74,20 @@ public class BorrowinServiceTest {
         verify(bookService, never()).makeBookUnAvailable(anyLong());
     }
 
+    @Test
+    public void testBorrowBook_NotEnabledBook() throws BadRequestException, ResourceNotFoundException {
+        // Mock book to be not enabled
+        ResponseBookDto book = new ResponseBookDto();
+        book.setAvailable(true);
+        book.setEnabled(false);
+        // Mock behavior of bookService
+        when(bookService.getBookById(anyLong())).thenReturn(book);
+        // Call the method and assert BadRequestException is thrown
+        assertThrows(BadRequestException.class, () -> borrowingService.borrowBook(1L, 2L));
+        // Ensure that borrowingRepo.save() and bookService.makeBookUnAvailable() are
+        // not called
+        verify(borrowingRepo, never()).save(any(BorrowingRecord.class));
+        verify(bookService, never()).makeBookUnAvailable(anyLong());
+    }
+
 }
