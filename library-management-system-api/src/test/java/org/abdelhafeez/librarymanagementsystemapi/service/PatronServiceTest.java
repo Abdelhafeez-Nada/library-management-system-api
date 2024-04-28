@@ -210,6 +210,16 @@ public class PatronServiceTest {
         verify(patronRepo, times(1)).findById(id);
     }
 
+    @Test
+    public void testUpdatePatron_InvalidInputParameter() {
+        // Prepare test data
+        Long id = null;
+        RequestPatronDto dto = RequestPatronDto.builder().build();
+        // Call the method under test and assert that it throws
+        // ResourceNotFoundException
+        assertThrows(BadRequestException.class, () -> patronServiceImpl.updatePatron(id, dto));
+    }
+
     private List<Patron> createEntityList() {
         Patron patron1 = Patron.builder()
                 .id(1l)
