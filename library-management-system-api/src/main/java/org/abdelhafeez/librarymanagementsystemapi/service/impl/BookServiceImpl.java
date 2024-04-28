@@ -12,6 +12,7 @@ import org.abdelhafeez.librarymanagementsystemapi.util.BeanMapper;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.RequestBookDto;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.ResponseBookDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
 
@@ -42,10 +43,28 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional(rollbackFor = { ResourceNotFoundException.class, BadRequestException.class })
     public ResponseBookDto updateBook(Long id, RequestBookDto dto)
-            throws Exception, ResourceNotFoundException, BadRequestException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateBook'");
+            throws ResourceNotFoundException, BadRequestException {
+        // Input Validation
+        if (id == null || dto == null) {
+            throw new BadRequestException("Invalid input parameters");
+        }
+        // Check Existence of Entity
+        Optional<Book> optionalBook = bookRepo.findById(id);
+        if (!optionalBook.isPresent()) {
+            throw new ResourceNotFoundException("Book", "Id", id);
+        }
+        // Update Entity
+        Book book = optionalBook.get();
+        book.setTitle(dto.getTitle());
+        book.setAuthor(dto.getAuthor());
+        book.setIsbn(dto.getIsbn());
+        book.setPublicationYear(dto.getPublicationYear());
+        // Save Changes
+        Book updatedBook = bookRepo.save(book);
+        // Map Entity to DTO
+        return beanMapper.mapEntityToDto(updatedBook, ResponseBookDto.class);
     }
 
     @Override
