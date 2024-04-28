@@ -12,6 +12,7 @@ import org.abdelhafeez.librarymanagementsystemapi.util.BeanMapper;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.RequestBookDto;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.ResponseBookDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,9 @@ public class BookServiceImpl implements BookService {
         // pagination information
         Page<Book> bookPage = bookRepo.findAll(pageable);
         // Map each Book entity to a ResponseBookDto
-        return bookPage.map(book -> beanMapper.mapDtoToEntity(book, ResponseBookDto.class));
+        List<ResponseBookDto> dtoList = beanMapper.mapEntityListToDtoList(bookPage.getContent(), ResponseBookDto.class);
+        // Create and return page of ResponseBookDto
+        return new PageImpl<ResponseBookDto>(dtoList, pageable, bookPage.getTotalElements());
     }
 
     /**
