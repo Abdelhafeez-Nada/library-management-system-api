@@ -3,6 +3,7 @@ package org.abdelhafeez.librarymanagementsystemapi.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,10 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.abdelhafeez.librarymanagementsystemapi.entity.Book;
+import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
 import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
 import org.abdelhafeez.librarymanagementsystemapi.repo.BookRepo;
 import org.abdelhafeez.librarymanagementsystemapi.service.impl.BookServiceImpl;
 import org.abdelhafeez.librarymanagementsystemapi.util.BeanMapper;
+import org.abdelhafeez.librarymanagementsystemapi.web.dto.RequestBookDto;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.ResponseBookDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -89,6 +92,38 @@ public class BookServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> bookServiceImpl.getBookById(id));
         // Verify that repository method was called with the correct ID
         verify(bookRepo, times(1)).findById(id);
+    }
+
+    @Test
+    public void testCreateBook() throws BadRequestException, Exception {
+        // Prepare test data
+        RequestBookDto requestBookDto = RequestBookDto.builder()
+                .author("author-1")
+                .title("title-1")
+                .isbn("isbn-1")
+                .publicationYear(Short.valueOf("2024"))
+                .build();
+        Book book = creatEntityList().get(0);
+        ResponseBookDto responseBookDto = createDtoList().get(0);
+        // Stubbing mapper behavior to map DTO to entity
+        when(beanMapper.mapDtoToEntity(requestBookDto, Book.class)).thenReturn(book);
+        // Stubbing repository behavior to save the entity and return it
+        when(bookRepo.save(any())).thenReturn(book);
+        // Stubbing mapper behavior to map entity to DTO
+        when(beanMapper.mapEntityToDto(book, ResponseBookDto.class)).thenReturn(responseBookDto);
+        // Call the method under test
+        ResponseBookDto createdBookDto = bookServiceImpl.createBook(requestBookDto);
+        // Verify that the mapper's mapDtoToEntity method was called with the provided
+        // DTO
+        verify(beanMapper, times(1)).mapDtoToEntity(requestBookDto, Book.class);
+        // Verify that the repository's save method was called once with the mapped
+        // entity
+        verify(bookRepo, times(1)).save(any());
+        // Verify that the mapper's mapEntityToDto method was called once with the saved
+        // entity
+        verify(beanMapper, times(1)).mapEntityToDto(book, ResponseBookDto.class);
+        // Assert that the returned DTO matches the expected response DTO
+        assertEquals(responseBookDto, createdBookDto);
     }
 
     private List<Book> creatEntityList() {
