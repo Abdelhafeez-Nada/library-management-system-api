@@ -144,7 +144,7 @@ public class PatronServiceImpl implements PatronService {
         Optional<Patron> optionalPatron = patronRepo.findById(id);
         if (!optionalPatron.isPresent())
             throw new ResourceNotFoundException("Patron", "Id", id);
-        // Delete the patron entity from the repository
+        // Soft Delete the patron entity from the repository
         Patron patron = optionalPatron.get();
         patron.setEnabled(false);
         patronRepo.save(patron);

@@ -148,8 +148,10 @@ public class BookServiceImpl implements BookService {
         Optional<Book> optionalBook = bookRepo.findById(id);
         if (!optionalBook.isPresent())
             throw new ResourceNotFoundException("Book", "Id", id);
-        // Delete the book entity from the repository
-        bookRepo.deleteById(id);
+        // Soft Delete the book entity from the repository
+        Book book = optionalBook.get();
+        book.setEnabled(false);
+        bookRepo.save(book);
     }
 
 }
