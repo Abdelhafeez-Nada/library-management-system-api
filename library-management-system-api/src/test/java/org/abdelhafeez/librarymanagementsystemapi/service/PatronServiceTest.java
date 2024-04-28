@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -251,6 +252,17 @@ public class PatronServiceTest {
         // Verify that repository method was called with the correct ID
         verify(patronRepo, times(1)).findById(id);
         // Verify that repository's save method was not called
+        verify(patronRepo, never()).save(any());
+    }
+
+    @Test
+    public void testSoftDeletePatron_InvalidInputParameter() {
+        // Prepare test data
+        Long id = null;
+        // Call the method under test and assert that it throws BadRequestException
+        assertThrows(BadRequestException.class, () -> patronServiceImpl.deletePatron(id));
+        // Verify that repository method was not called
+        verify(patronRepo, never()).findById(anyLong());
         verify(patronRepo, never()).save(any());
     }
 
