@@ -18,6 +18,6 @@ public interface BookService {
     public ResponseBookDto updateBook(Long id, RequestBookDto dto)
             throws Exception, ResourceNotFoundException, BadRequestException;
 
-    public void deleteBook(Long id) throws Exception, ResourceNotFoundException;
+    public void deleteBook(Long id) throws Exception, ResourceNotFoundException, BadRequestException;
 
 }
