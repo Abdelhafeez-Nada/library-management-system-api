@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.abdelhafeez.librarymanagementsystemapi.entity.Patron;
 import org.abdelhafeez.librarymanagementsystemapi.repo.PatronRepo;
@@ -98,6 +99,21 @@ public class PatronServiceTest {
             // list
             assertEquals(dtoList.get(i), resultContent.get(i));
         }
+    }
+
+    @Test
+    public void testGetPatronById_EntityFound() {
+        Patron patron = createEntityList().get(0);
+        // Stubbing repository behavior
+        when(patronRepo.findById(patron.getId())).thenReturn(Optional.of(patron));
+        // Stubbing mapper behavior
+        when(beanMapper.mapEntityToDto(patron, ResponsePatronDto.class)).thenReturn(new ResponsePatronDto());
+        // Call the method under test
+        ResponsePatronDto responsePatronDto = patronServiceImpl.getPatronById(patron.getId());
+        // Verify that repository method was called with the correct ID
+        verify(patronRepo, times(1)).findById(patron.getId());
+        // Assert that the returned DTO is not null
+        assertNotNull(responsePatronDto);
     }
 
     private List<Patron> createEntityList() {
