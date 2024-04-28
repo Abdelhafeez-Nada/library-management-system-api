@@ -3,6 +3,7 @@ package org.abdelhafeez.librarymanagementsystemapi.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,10 +13,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.abdelhafeez.librarymanagementsystemapi.entity.Patron;
+import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
 import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
 import org.abdelhafeez.librarymanagementsystemapi.repo.PatronRepo;
 import org.abdelhafeez.librarymanagementsystemapi.service.impl.PatronServiceImpl;
 import org.abdelhafeez.librarymanagementsystemapi.util.BeanMapper;
+import org.abdelhafeez.librarymanagementsystemapi.web.dto.RequestPatronDto;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.ResponsePatronDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -129,6 +132,36 @@ public class PatronServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> patronServiceImpl.getPatronById(id));
         // Verify that repository method was called with the correct ID
         verify(patronRepo, times(1)).findById(id);
+    }
+
+    @Test
+    public void testCreatePatron() throws BadRequestException {
+        // Prepare test data
+        RequestPatronDto requestPatronDto = RequestPatronDto.builder()
+                .name("name-1")
+                .contactInfo("contact-1")
+                .build();
+        Patron patron = createEntityList().get(0);
+        ResponsePatronDto responsePatronDto = createDtoList().get(0);
+        // Stubbing mapper behavior to map DTO to entity
+        when(beanMapper.mapDtoToEntity(requestPatronDto, Patron.class)).thenReturn(patron);
+        // Stubbing repository behavior to save the entity and return it
+        when(patronRepo.save(any())).thenReturn(patron);
+        // Stubbing mapper behavior to map entity to DTO
+        when(beanMapper.mapEntityToDto(patron, ResponsePatronDto.class)).thenReturn(responsePatronDto);
+        // Call the method under test
+        ResponsePatronDto createdPatronDto = patronServiceImpl.createPatron(requestPatronDto);
+        // Verify that the mapper's mapDtoToEntity method was called with the provided
+        // DTO
+        verify(beanMapper, times(1)).mapDtoToEntity(requestPatronDto, Patron.class);
+        // Verify that the repository's save method was called once with the mapped
+        // entity
+        verify(patronRepo, times(1)).save(any());
+        // Verify that the mapper's mapEntityToDto method was called once with the saved
+        // entity
+        verify(beanMapper, times(1)).mapEntityToDto(patron, ResponsePatronDto.class);
+        // Assert that the returned DTO matches the expected response DTO
+        assertEquals(responsePatronDto, createdPatronDto);
     }
 
     private List<Patron> createEntityList() {
