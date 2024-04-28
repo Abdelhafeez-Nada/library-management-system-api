@@ -16,5 +16,8 @@ public interface PatronService {
 
     public ResponsePatronDto getPatronById(Long id) throws ResourceNotFoundException;
 
-    public ResponsePatronDto createBook(RequestPatronDto dto) throws BadRequestException;
+    public ResponsePatronDto createPatron(RequestPatronDto dto) throws BadRequestException;
+
+    public ResponsePatronDto updatePatron(Long id, RequestPatronDto dto)
+            throws ResourceNotFoundException, BadRequestException;
 }
