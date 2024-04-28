@@ -3,7 +3,9 @@ package org.abdelhafeez.librarymanagementsystemapi.service.impl;
 import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
 import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
 import org.abdelhafeez.librarymanagementsystemapi.repo.BorrowingRecordRepo;
+import org.abdelhafeez.librarymanagementsystemapi.service.contract.BookService;
 import org.abdelhafeez.librarymanagementsystemapi.service.contract.BorrowingService;
+import org.abdelhafeez.librarymanagementsystemapi.service.contract.PatronService;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -13,6 +15,10 @@ import lombok.AllArgsConstructor;
 public class BorrowingServiceImpl implements BorrowingService {
 
     private final BorrowingRecordRepo borrowingRepo;
+
+    private final BookService bookService;
+
+    private final PatronService patronService;
 
     @Override
     public void borrowBook(Long bookId, Long patronId) throws BadRequestException, ResourceNotFoundException {
