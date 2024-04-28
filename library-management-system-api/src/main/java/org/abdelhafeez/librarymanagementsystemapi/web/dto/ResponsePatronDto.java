@@ -17,4 +17,5 @@ public class ResponsePatronDto {
     private String contactInfo;
     private Date createdAt;
     private Date updatedAt;
+    private Boolean enabled;
 }
