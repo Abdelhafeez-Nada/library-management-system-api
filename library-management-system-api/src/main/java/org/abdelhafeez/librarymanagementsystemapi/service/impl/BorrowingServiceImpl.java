@@ -3,7 +3,9 @@ package org.abdelhafeez.librarymanagementsystemapi.service.impl;
 import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
 import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
 import org.abdelhafeez.librarymanagementsystemapi.service.contract.BorrowingService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BorrowingServiceImpl implements BorrowingService {
 
     @Override
