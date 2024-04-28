@@ -9,5 +9,5 @@ public interface PatronService {
 
     public List<ResponsePatronDto> getAllPatrons();
 
-    public Page<ResponsePatronDto> getAllBooks(int page, int size);
+    public Page<ResponsePatronDto> getAllPatrons(int page, int size);
 }
