@@ -1,6 +1,7 @@
 package org.abdelhafeez.librarymanagementsystemapi.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.abdelhafeez.librarymanagementsystemapi.entity.Patron;
 import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
@@ -62,10 +63,23 @@ public class PatronServiceImpl implements PatronService {
         return new PageImpl<ResponsePatronDto>(dtoList, pageable, patronPage.getTotalElements());
     }
 
+    /**
+     * Retrieves a patron by their ID.
+     * 
+     * @param id The ID of the patron to retrieve.
+     * @return The ResponsePatronDto representing the patron.
+     * @throws ResourceNotFoundException If the patron with the given ID is not
+     *                                   found.
+     */
     @Override
     public ResponsePatronDto getPatronById(Long id) throws ResourceNotFoundException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPatronById'");
+        // Retrieve patron from the repository by ID
+        Optional<Patron> optional = patronRepo.findById(id);
+        // Map the patron to a DTO if it exists, otherwise throw a
+        // ResourceNotFoundException
+        return optional.map(
+                patron -> beanMapper.mapEntityToDto(patron, ResponsePatronDto.class))
+                .orElseThrow(() -> new ResourceNotFoundException("Patron", "Id", id));
     }
 
     @Override
