@@ -9,8 +9,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Date;
 import java.util.Optional;
 
+import org.abdelhafeez.librarymanagementsystemapi.entity.Book;
 import org.abdelhafeez.librarymanagementsystemapi.entity.BorrowingRecord;
 import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
 import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
@@ -125,6 +127,20 @@ public class BorrowinServiceTest {
         verify(borrowingRepo, times(1)).findByBookIdAndPatronIdAndReturnDateIsNull(1L, 2L);
         verify(borrowingRepo, times(1)).save(borrowingRecord);
         verify(bookService, times(1)).makeBookAvailable(1L);
+    }
+
+    @Test
+    public void testReturnBook_AlreadyReturnedBook() throws BadRequestException, ResourceNotFoundException {
+
+        // Mock behavior of borrowingRepo.findByBookIdAndPatronIdAndReturnDateIsNull()
+        when(borrowingRepo.findByBookIdAndPatronIdAndReturnDateIsNull(anyLong(), anyLong()))
+                .thenReturn(Optional.empty());
+        // Call the method and assert BadRequestException is thrown
+        assertThrows(BadRequestException.class, () -> borrowingService.returnBook(1L, 2L));
+        // Ensure that borrowingRepo.save() and bookService.makeBookAvailable() are not
+        // called
+        verify(borrowingRepo, never()).save(any(BorrowingRecord.class));
+        verify(bookService, never()).makeBookAvailable(anyLong());
     }
 
 }
