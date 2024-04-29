@@ -46,10 +46,8 @@ public class Book {
     @UpdateTimestamp
     private Date updatedAt;
 
-    // @PostConstruct
     @PrePersist
     public void setup() {
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.");
         this.available = true;
         this.enabled = true;
     }
