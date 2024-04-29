@@ -21,3 +21,5 @@ insert into borrowing_records
 values
     (current_timestamp, current_timestamp, 1, 1),
     (current_timestamp, current_timestamp, 2, 1);
+
+UPDATE books set available=false , updated_at=CURRENT_TIMESTAMP where id=1 or id=2; 
