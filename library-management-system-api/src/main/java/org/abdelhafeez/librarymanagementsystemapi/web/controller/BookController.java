@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("api/books")
 @AllArgsConstructor
+@Tag(name = "Books-APIs", description = "Contains Endpoints to interact with books")
 public class BookController {
 
     private final BookService bookService;
