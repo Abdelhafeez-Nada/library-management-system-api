@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,4 +45,10 @@ public class Book {
     private Date createdAt;
     @UpdateTimestamp
     private Date updatedAt;
+
+    @PostConstruct
+    public void setup() {
+        this.available = true;
+        this.enabled = true;
+    }
 }
