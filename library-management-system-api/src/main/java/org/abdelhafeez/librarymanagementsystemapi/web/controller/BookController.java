@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -94,6 +95,25 @@ public class BookController {
         ResponseBookDto responseBookDto = bookService.createBook(dto);
         // Return a ResponseEntity with the created book and HTTP status CREATED
         return new ResponseEntity<>(responseBookDto, HttpStatus.CREATED);
+    }
+
+    /**
+     * Controller method for updating a book.
+     * 
+     * @param bookId     The ID of the book to update.
+     * @param requestDto The RequestBookDto containing updated information about the
+     *                   book.
+     * @return ResponseEntity containing the updated ResponseBookDto representing
+     *         the updated book and HttpStatus.OK.
+     */
+    @PutMapping("/{bookId}")
+    @Operation(summary = "Update a book by its ID")
+    public ResponseEntity<ResponseBookDto> updateBook(@PathVariable("bookId") Long bookId,
+            @Valid @RequestBody RequestBookDto requestDto) {
+        // Call the service layer to update the book
+        ResponseBookDto responseDto = bookService.updateBook(bookId, requestDto);
+        // Return a ResponseEntity with the updated book and HTTP status OK
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
 }
