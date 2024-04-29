@@ -3,16 +3,13 @@ package org.abdelhafeez.librarymanagementsystemapi.service;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Date;
 import java.util.Optional;
 
-import org.abdelhafeez.librarymanagementsystemapi.entity.Book;
 import org.abdelhafeez.librarymanagementsystemapi.entity.BorrowingRecord;
 import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
 import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
