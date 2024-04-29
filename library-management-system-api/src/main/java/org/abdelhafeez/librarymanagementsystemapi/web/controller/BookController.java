@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 
@@ -28,6 +29,7 @@ public class BookController {
      *         representing the books and HttpStatus.OK
      */
     @GetMapping()
+    @Operation(summary = "Retreive All Books at once no pagination")
     public ResponseEntity<List<ResponseBookDto>> getAllBooks() {
         // Call the service layer to retrieve all books
         List<ResponseBookDto> list = bookService.getAllBooks();
