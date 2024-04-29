@@ -6,7 +6,6 @@ import org.abdelhafeez.librarymanagementsystemapi.service.contract.BookService;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.ResponseBookDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
