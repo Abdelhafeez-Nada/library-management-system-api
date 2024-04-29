@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,6 +57,23 @@ public class BookController {
         Page<ResponseBookDto> booksPage = bookService.getAllBooks(page, size);
         // Return a ResponseEntity with the page of books and HTTP status OK
         return new ResponseEntity<>(booksPage, HttpStatus.OK);
+    }
+
+    /**
+     * Controller method for retrieving a book by its ID.
+     * 
+     * @param bookId The ID of the book to retrieve.
+     * @return ResponseEntity containing the ResponseBookDto representing the book
+     *         and HttpStatus.OK if the book is found,
+     *         otherwise HttpStatus.NOT_FOUND.
+     */
+    @GetMapping("/{bookId}")
+    @Operation(summary = "Retrieve a book by its ID")
+    public ResponseEntity<ResponseBookDto> getBookById(@PathVariable("bookId") Long bookId) {
+        // Retrieve the book by its ID from the service layer
+        ResponseBookDto dto = bookService.getBookById(bookId);
+        // Return a ResponseEntity with the book and HTTP status OK
+        return new ResponseEntity<ResponseBookDto>(dto, HttpStatus.OK);
     }
 
 }
