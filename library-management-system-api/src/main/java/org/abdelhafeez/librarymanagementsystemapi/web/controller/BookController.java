@@ -8,6 +8,7 @@ import org.abdelhafeez.librarymanagementsystemapi.web.dto.ResponseBookDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -114,6 +115,21 @@ public class BookController {
         ResponseBookDto responseDto = bookService.updateBook(bookId, requestDto);
         // Return a ResponseEntity with the updated book and HTTP status OK
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    /**
+     * Controller method for removing a book.
+     * 
+     * @param bookId The ID of the book to remove.
+     * @return ResponseEntity with HTTP status NO_CONTENT.
+     */
+    @DeleteMapping("/{bookId}")
+    @Operation(summary = "Remove a book by its ID")
+    public ResponseEntity<Void> removeBook(@PathVariable("bookId") Long bookId) {
+        // Call the service layer to delete the book
+        bookService.deleteBook(bookId);
+        // Return a ResponseEntity with HTTP status NO_CONTENT
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
