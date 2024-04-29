@@ -1,5 +1,6 @@
 package org.abdelhafeez.librarymanagementsystemapi.web.errorresponsehandler;
 
+import org.abdelhafeez.librarymanagementsystemapi.exception.BadRequestException;
 import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,15 @@ public class GlobalErrorResponseHandler {
         // Return a ResponseEntity with the ErrorResponseDto and HTTP status 404 Not
         // Found
         return new ResponseEntity<>(dto, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponseDto> badRequesException(BadRequestException exception) {
+        // Create an ErrorResponseDto with error details
+        ErrorResponseDto dto = new ErrorResponseDto("400", exception.getMessage());
+        // Return a ResponseEntity with the ErrorResponseDto and HTTP status 404 Not
+        // Found
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
     }
 
 }
