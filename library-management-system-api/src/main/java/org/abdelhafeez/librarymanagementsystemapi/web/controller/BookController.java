@@ -1,5 +1,6 @@
 package org.abdelhafeez.librarymanagementsystemapi.web.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.abdelhafeez.librarymanagementsystemapi.service.contract.BookService;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -89,13 +92,20 @@ public class BookController {
      * @return ResponseEntity containing the newly created ResponseBookDto
      *         representing the created book and HttpStatus.CREATED.
      */
-    @PostMapping("")
+    @PostMapping()
     @Operation(summary = "Create a new book")
-    public ResponseEntity<ResponseBookDto> createBook(@Valid @RequestBody RequestBookDto dto) {
+    public ResponseEntity<ResponseBookDto> createBook(@Valid @RequestBody RequestBookDto dto,
+            UriComponentsBuilder uriBuilder) {
         // Call the service layer to create the new book
         ResponseBookDto responseBookDto = bookService.createBook(dto);
-        // Return a ResponseEntity with the created book and HTTP status CREATED
-        return new ResponseEntity<>(responseBookDto, HttpStatus.CREATED);
+        // Get the URI of the created resource
+        URI location = MvcUriComponentsBuilder.fromMethodName(
+                getClass(),
+                "getBookById",
+                responseBookDto.getId()).build().toUri();
+        // Return a ResponseEntity with the created book, HTTP status CREATED, and
+        // Location header
+        return ResponseEntity.created(location).body(responseBookDto);
     }
 
     /**
