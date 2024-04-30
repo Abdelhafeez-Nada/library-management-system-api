@@ -89,7 +89,7 @@ public class BookController {
      * @return ResponseEntity containing the newly created ResponseBookDto
      *         representing the created book and HttpStatus.CREATED.
      */
-    @PostMapping("/books")
+    @PostMapping("")
     @Operation(summary = "Create a new book")
     public ResponseEntity<ResponseBookDto> createBook(@Valid @RequestBody RequestBookDto dto) {
         // Call the service layer to create the new book
