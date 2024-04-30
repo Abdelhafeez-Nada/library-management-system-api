@@ -1,5 +1,8 @@
 package org.abdelhafeez.librarymanagementsystemapi.controller;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import org.abdelhafeez.librarymanagementsystemapi.service.contract.BookService;
 import org.abdelhafeez.librarymanagementsystemapi.web.controller.BookController;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.RequestBookDto;
@@ -27,12 +30,19 @@ public class BookControllerTest {
 
     @Test
     public void testCreateBook_should400ReturnBadRequest() throws Exception {
+        // Create an empty RequestBookDto
         RequestBookDto requestDto = RequestBookDto.builder().build();
+        // Serialize the RequestBookDto to JSON
         String requestJson = objectMapper.writeValueAsString(requestDto);
-        mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_PATH).contentType(MediaType.APPLICATION_JSON_VALUE)
+        // Perform a POST request to the endpoint, sending the serialized JSON as
+        // content
+        mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_PATH)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(requestJson))
+                // Expect the status to be 400 (Bad Request)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
-
+        // Verify that the createBook method of bookService is not called
+        verify(bookService, times(0)).createBook(requestDto);
     }
 
 }
