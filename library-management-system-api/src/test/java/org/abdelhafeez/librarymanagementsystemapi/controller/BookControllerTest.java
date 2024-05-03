@@ -5,7 +5,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.abdelhafeez.librarymanagementsystemapi.exception.ResourceNotFoundException;
 import org.abdelhafeez.librarymanagementsystemapi.service.contract.BookService;
 import org.abdelhafeez.librarymanagementsystemapi.web.controller.BookController;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.RequestBookDto;
@@ -90,6 +92,26 @@ public class BookControllerTest {
                 // Verify that bookService.createBook was called exactly once with the given
                 // requestDto
                 verify(bookService, times(1)).createBook(requestDto);
+        }
+
+        @Test
+        public void testGetBookById_ShouldReturn404NotFound() throws Exception {
+                // Prepare test data
+                Long id = 1L;
+                String path = ENDPOINT_PATH + "/" + id;
+                // Mock the behavior of the bookService.getBookById method to throw
+                // ResourceNotFoundException
+                when(bookService.getBookById(id)).thenThrow(ResourceNotFoundException.class);
+                // Perform GET request and validate response
+                mockMvc.perform(MockMvcRequestBuilders.get(path))
+                                // Expecting status 404 NOT FOUND
+                                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                // Verify that bookService.getBookById was called exactly once with the given id
+                verify(bookService, times(1)).getBookById(id);
+                // Assert that ResourceNotFoundException is thrown by bookService.getBookById
+                assertThrows(ResourceNotFoundException.class, () -> {
+                        bookService.getBookById(id);
+                });
         }
 
 }
