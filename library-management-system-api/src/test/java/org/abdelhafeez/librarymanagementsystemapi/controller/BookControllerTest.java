@@ -114,4 +114,37 @@ public class BookControllerTest {
                 });
         }
 
+        @Test
+        public void testGetBookById_ShouldReturn200Ok() throws Exception {
+                // Prepare test data
+                Long id = 1L;
+                String path = ENDPOINT_PATH + "/" + id;
+
+                // Prepare mocked response DTO
+                ResponseBookDto responseDto = ResponseBookDto.builder()
+                                .id(id)
+                                .title("title")
+                                .author("author")
+                                .publicationYear(Short.valueOf("2020"))
+                                .isbn("ISBN")
+                                .build();
+                // Mock the behavior of the bookService.getBookById method
+                when(bookService.getBookById(id)).thenReturn(responseDto);
+                // Perform GET request and validate response
+                mockMvc.perform(MockMvcRequestBuilders.get(path))
+                                // Expecting JSON content
+                                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                                // Expecting status 200 OK
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                // Expecting correct values for id,title,author,isbn,publicationYear
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.id", is(responseDto.getId().intValue())))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.title", is(responseDto.getTitle())))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.author", is(responseDto.getAuthor())))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.isbn", is(responseDto.getIsbn())))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.publicationYear",
+                                                is(responseDto.getPublicationYear().intValue())));
+                // Verify that bookService.getBookById was called exactly once with the given id
+                verify(bookService, times(1)).getBookById(id);
+        }
+
 }
