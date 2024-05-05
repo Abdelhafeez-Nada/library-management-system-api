@@ -3,6 +3,10 @@ package org.abdelhafeez.librarymanagementsystemapi.controller;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -145,6 +149,20 @@ public class BookControllerTest {
                                                 is(responseDto.getPublicationYear().intValue())));
                 // Verify that bookService.getBookById was called exactly once with the given id
                 verify(bookService, times(1)).getBookById(id);
+        }
+
+        @Test
+        public void testGetAllBooks_shouldReturn204NoContent() throws Exception {
+                // Prepare an empty list of books
+                List<ResponseBookDto> empty = new ArrayList<>();
+                // Mock the behavior of the book service to return the empty list
+                when(bookService.getAllBooks()).thenReturn(empty);
+                // Perform a GET request to the endpoint
+                mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_PATH))
+                                // Verify that the response status is 204 (NO_CONTENT)
+                                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                // Verify that the getAllBooks method of the book service is called exactly once
+                verify(bookService, times(1)).getAllBooks();
         }
 
 }
