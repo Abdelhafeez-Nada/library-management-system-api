@@ -45,13 +45,11 @@ public class BookController {
     public ResponseEntity<List<ResponseBookDto>> getAllBooks() {
         List<ResponseBookDto> list = bookService.getAllBooks();
 
-        if (list.isEmpty()) {
+        if (list.isEmpty())
             // No content to return
             return ResponseEntity.noContent().build();
-        } else {
-            // Return the list of books with HTTP status OK
-            return ResponseEntity.ok(list);
-        }
+        // Return the list of books with HTTP status OK
+        return ResponseEntity.ok(list);
     }
 
     /**
