@@ -67,6 +67,9 @@ public class BookController {
             @RequestParam(name = "size", defaultValue = "2") int size) {
         // Retrieve the requested page of books from the service layer
         Page<ResponseBookDto> booksPage = bookService.getAllBooks(page, size);
+        if (booksPage.isEmpty())
+            // Return a ResponseEntity with HTTP status NoContent
+            return ResponseEntity.noContent().build();
         // Return a ResponseEntity with the page of books and HTTP status OK
         return new ResponseEntity<>(booksPage, HttpStatus.OK);
     }
