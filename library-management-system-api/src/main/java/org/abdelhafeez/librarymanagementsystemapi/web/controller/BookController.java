@@ -38,15 +38,20 @@ public class BookController {
      * Retrieves all books.
      * 
      * @return ResponseEntity containing a list of ResponseBookDto objects
-     *         representing the books and HttpStatus.OK
+     *         representing the books and appropriate HTTP status
      */
     @GetMapping()
-    @Operation(summary = "Retreive all books at once, no pagination")
+    @Operation(summary = "Retrieve all books at once, no pagination")
     public ResponseEntity<List<ResponseBookDto>> getAllBooks() {
-        // Call the service layer to retrieve all books
         List<ResponseBookDto> list = bookService.getAllBooks();
-        // Return a ResponseEntity with the list of books and HTTP status OK
-        return new ResponseEntity<List<ResponseBookDto>>(list, HttpStatus.OK);
+
+        if (list.isEmpty()) {
+            // No content to return
+            return ResponseEntity.noContent().build();
+        } else {
+            // Return the list of books with HTTP status OK
+            return ResponseEntity.ok(list);
+        }
     }
 
     /**
