@@ -208,6 +208,37 @@ public class BookControllerTest {
                                 .andExpect(MockMvcResultMatchers.status().isNoContent());
         }
 
+        @Test
+        public void testGetBooksPage_ShouldReturn200Ok() throws Exception {
+                // Prepare a list of ResponseBookDto
+                List<ResponseBookDto> list = createDtoList();
+                // Set the page number and size for the request
+                int page = 0;
+                int size = 1;
+                // Create a Page object with the list
+                Page<ResponseBookDto> pageResponse = new PageImpl<>(list);
+                // Mock the behavior of the book service to return this Page object
+                when(bookService.getAllBooks(page, size)).thenReturn(pageResponse);
+                // Perform a GET request to the endpoint with the specified page and size
+                // parameters
+                mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_PATH + "/page")
+                                .param("page", String.valueOf(page))
+                                .param("size", String.valueOf(size)))
+                                // Expect the response status to be 200 (OK)
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                // Expect total elements, total pages, page number, and page size to be present
+                                // in the response
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.totalElements")
+                                                .value(pageResponse.getTotalElements()))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPages")
+                                                .value(pageResponse.getTotalPages()))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.number").value(pageResponse.getNumber()))
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.size").value(pageResponse.getSize()));
+                // Verify that the getAllBooks method of the book service is called exactly once
+                // with the given page and size
+                verify(bookService, times(1)).getAllBooks(page, size);
+        }
+
         private List<ResponseBookDto> createDtoList() {
                 ResponseBookDto responseBookDto1 = ResponseBookDto.builder()
                                 .id(1l)
