@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -184,6 +186,26 @@ public class BookControllerTest {
                                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(list.size()));
                 // Verify that the getAllBooks method of the book service is called exactly once
                 verify(bookService, times(1)).getAllBooks();
+        }
+
+        @Test
+        public void testGetBooksPage_ShouldReturn204NoContent() throws Exception {
+                // Prepare an empty list of books
+                List<ResponseBookDto> empty = new ArrayList<>();
+                // Set the page number and size for the request
+                int page = 0;
+                int size = 1;
+                // Create a Page object with the empty list
+                Page<ResponseBookDto> pageResponse = new PageImpl<>(empty);
+                // Mock the behavior of the book service to return this Page object
+                when(bookService.getAllBooks(page, size)).thenReturn(pageResponse);
+                // Perform a GET request to the endpoint with the specified page and size
+                // parameters
+                mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_PATH)
+                                .param("page", String.valueOf(page))
+                                .param("size", String.valueOf(size)))
+                                // Expect the response status to be 204 (NO_CONTENT)
+                                .andExpect(MockMvcResultMatchers.status().isNoContent());
         }
 
         private List<ResponseBookDto> createDtoList() {
