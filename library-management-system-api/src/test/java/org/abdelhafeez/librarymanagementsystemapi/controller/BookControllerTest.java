@@ -5,6 +5,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
@@ -163,6 +165,30 @@ public class BookControllerTest {
                                 .andExpect(MockMvcResultMatchers.status().isNoContent());
                 // Verify that the getAllBooks method of the book service is called exactly once
                 verify(bookService, times(1)).getAllBooks();
+        }
+
+        private List<ResponseBookDto> createDtoList() {
+                ResponseBookDto responseBookDto1 = ResponseBookDto.builder()
+                                .id(1l)
+                                .author("author-1")
+                                .title("title-1")
+                                .isbn("isbn-1")
+                                .publicationYear(Short.valueOf("2024"))
+                                .createdAt(new Date())
+                                .available(true)
+                                .enabled(true)
+                                .build();
+                ResponseBookDto responseBookDto2 = ResponseBookDto.builder()
+                                .id(2l)
+                                .author("author-2")
+                                .title("title-2")
+                                .isbn("isbn-2")
+                                .publicationYear(Short.valueOf("2024"))
+                                .createdAt(new Date())
+                                .available(true)
+                                .enabled(true)
+                                .build();
+                return Arrays.asList(responseBookDto1, responseBookDto2);
         }
 
 }
