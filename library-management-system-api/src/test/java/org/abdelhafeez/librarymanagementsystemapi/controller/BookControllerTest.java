@@ -239,6 +239,24 @@ public class BookControllerTest {
                 verify(bookService, times(1)).getAllBooks(page, size);
         }
 
+        @Test
+        public void testUpdateBook_ShouldReturn400BadRequest() throws Exception {
+                // Prepare test data
+                Long id = 1L;
+                // Construct the endpoint URL with the book ID
+                String path = ENDPOINT_PATH + "/" + id;
+                // Prepare an empty request DTO
+                RequestBookDto requestDto = RequestBookDto.builder().build();
+                // Serialize the request DTO to JSON
+                String requestJson = objectMapper.writeValueAsString(requestDto);
+                // Perform a PUT request to the endpoint with the book ID included in the URL
+                mockMvc.perform(MockMvcRequestBuilders.put(path)
+                                .contentType("application/json")
+                                .content(requestJson))
+                                // Expect the response status to be 400 (Bad Request)
+                                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        }
+
         private List<ResponseBookDto> createDtoList() {
                 ResponseBookDto responseBookDto1 = ResponseBookDto.builder()
                                 .id(1l)
