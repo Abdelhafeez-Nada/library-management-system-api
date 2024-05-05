@@ -167,6 +167,25 @@ public class BookControllerTest {
                 verify(bookService, times(1)).getAllBooks();
         }
 
+        @Test
+        public void testGetAllBooks_SHouldReturn200OkWithListOf2Elements() throws Exception {
+                // Create a list of ResponseBookDto with 2 elements
+                List<ResponseBookDto> list = createDtoList();
+                // Mock the behavior of the book service to return this list
+                when(bookService.getAllBooks()).thenReturn(list);
+
+                // Perform a GET request to the endpoint
+                mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_PATH))
+                                // Expect the content type of the response to be "application/json"
+                                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                                // Expect the response status to be 200 (OK)
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                                // Expect the content of the response to be an array of length 2
+                                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(list.size()));
+                // Verify that the getAllBooks method of the book service is called exactly once
+                verify(bookService, times(1)).getAllBooks();
+        }
+
         private List<ResponseBookDto> createDtoList() {
                 ResponseBookDto responseBookDto1 = ResponseBookDto.builder()
                                 .id(1l)
