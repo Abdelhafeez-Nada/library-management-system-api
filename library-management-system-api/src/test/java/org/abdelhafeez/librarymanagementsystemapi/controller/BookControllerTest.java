@@ -257,6 +257,36 @@ public class BookControllerTest {
                                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
+        @Test
+        public void testUpdateBook_ShouldReturn404NotFound() throws Exception {
+                // Prepare test data
+                Long id = 1L;
+                // Prepare request DTO with book information
+                RequestBookDto requestDto = RequestBookDto.builder()
+                                .title("title")
+                                .author("author")
+                                .publicationYear(Short.valueOf("2020"))
+                                .isbn("ISBN")
+                                .build();
+                // Serialize the request DTO to JSON
+                String requestJson = objectMapper.writeValueAsString(requestDto);
+                // Construct the endpoint URL with the book ID
+                String path = ENDPOINT_PATH + "/" + id;
+                // Mock the behavior of the book service to throw ResourceNotFoundException
+                when(bookService.updateBook(id, requestDto)).thenThrow(ResourceNotFoundException.class);
+
+                // Perform a PUT request to the endpoint with the book ID included in the URL
+                mockMvc.perform(MockMvcRequestBuilders.put(path)
+                                .contentType("application/json")
+                                .content(requestJson))
+                                // Expect the response status to be 404 (Not Found)
+                                .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+                // Verify that the updateBook method of the book service is called exactly once
+                // with the given book ID and request DTO
+                verify(bookService, times(1)).updateBook(id, requestDto);
+        }
+
         private List<ResponseBookDto> createDtoList() {
                 ResponseBookDto responseBookDto1 = ResponseBookDto.builder()
                                 .id(1l)
