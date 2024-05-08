@@ -116,15 +116,7 @@ public class PatronServiceImpl implements PatronService {
     @Transactional(rollbackFor = { ResourceNotFoundException.class, BadRequestException.class })
     public ResponsePatronDto updatePatron(Long id, RequestPatronDto dto)
             throws ResourceNotFoundException, BadRequestException {
-        // Input Validation
-        if (id == null || dto == null)
-            throw new BadRequestException("Invalid input parameters");
-        // Check Existence of Entity
-        Optional<Patron> optionalPatron = patronRepo.findById(id);
-        if (!optionalPatron.isPresent())
-            throw new ResourceNotFoundException("Patron", "Id", id);
-        // Retrieve the patron entity from the repository
-        Patron patron = optionalPatron.get();
+        Patron patron = checkPatronExistenceAndRetreive(id);
         // Update the patron entity with the new information
         patron.setName(dto.getName());
         patron.setContactInfo(dto.getContactInfo());
@@ -137,17 +129,20 @@ public class PatronServiceImpl implements PatronService {
     @Override
     @Transactional(rollbackFor = { ResourceNotFoundException.class, BadRequestException.class })
     public void deletePatron(Long id) throws ResourceNotFoundException, BadRequestException {
+        Patron patron = checkPatronExistenceAndRetreive(id);
+        patron.setEnabled(false);
+        patronRepo.save(patron);
+    }
+
+    private Patron checkPatronExistenceAndRetreive(Long id) throws BadRequestException, ResourceNotFoundException {
         // Input Validation
         if (id == null)
             throw new BadRequestException("Invalid input parameters");
         // Check Existence of Entity
         Optional<Patron> optionalPatron = patronRepo.findById(id);
         if (!optionalPatron.isPresent())
-            throw new ResourceNotFoundException("Patron", "Id", id);
-        // Soft Delete the patron entity from the repository
-        Patron patron = optionalPatron.get();
-        patron.setEnabled(false);
-        patronRepo.save(patron);
+            throw new ResourceNotFoundException("Book", "Id", id);
+        return optionalPatron.get();
     }
 
 }
