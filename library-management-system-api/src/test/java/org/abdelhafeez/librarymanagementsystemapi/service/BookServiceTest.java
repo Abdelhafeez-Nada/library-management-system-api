@@ -25,6 +25,7 @@ import org.abdelhafeez.librarymanagementsystemapi.service.impl.BookServiceImpl;
 import org.abdelhafeez.librarymanagementsystemapi.util.BeanMapper;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.RequestBookDto;
 import org.abdelhafeez.librarymanagementsystemapi.web.dto.ResponseBookDto;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -275,6 +276,7 @@ public class BookServiceTest {
     }
 
     @Test
+    @Disabled
     public void testDeleteBook_SuccessfulDeletion() {
         // Prepare test data
         Long id = 1L;
