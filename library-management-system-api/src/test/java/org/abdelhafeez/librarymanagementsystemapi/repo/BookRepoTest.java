@@ -14,6 +14,19 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import jakarta.persistence.Query;
 
+/**
+ * @DataJpaTest
+ *              1. It scans the `@Entity` classes and Spring Data JPA
+ *              repositories.
+ *              2. Set the `spring.jpa.show-sql` property to true and enable the
+ *              SQL queries logging.
+ *              3. Default, JPA test data are transactional and roll back at the
+ *              end of each test;
+ *              it means we do not need to clean up saved or modified table data
+ *              after each test.
+ *              4. Replace the application DataSource, run and configure the
+ *              embedded database on classpath.
+ */
 @DataJpaTest()
 public class BookRepoTest {
 
